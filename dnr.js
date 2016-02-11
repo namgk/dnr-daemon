@@ -15,7 +15,8 @@ client.on('message', function (topic, message) {
   var flowsUrl = message.toString();
   console.log('DEBUG: downloading config from ' + flowsUrl);
   downloadConfig(flowsUrl, function(config){
-    redeployConfig(dnrizeConfig(JSON.parse(config)));
+    console.log('DEBUG: redeploying config to ' + settings.localNodeRED);
+    redeployConfig(dnrizeConfig(JSON.parse(config)), settings.localNodeRED + '/flows');
   })
 });
 
@@ -250,9 +251,8 @@ function downloadConfig(url, cb){
   })
 }
 
-function redeployConfig(dnrizedConfig){
+function redeployConfig(dnrizedConfig, nrEndpoint){
   // TODO: discover this endpoint or get from settings
-  var nrEndpoint = 'http://localhost:1880/flows';
   var payload = JSON.stringify(dnrizedConfig);
   var opts = urllib.parse(nrEndpoint);
   opts.headers = {

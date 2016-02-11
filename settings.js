@@ -21,4 +21,5 @@
 module.exports = {
     // this device
     deviceId: "1880",
+    localNodeRED: "http://localhost:1880"
 }
