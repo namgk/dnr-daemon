@@ -38,5 +38,5 @@ module.exports = {
     test9: testFlows9,
     test10: testFlows10,
     flow0: flow0,
-    test10AddedFlow0: te
+    test10AddedFlow0: test10AddedFlow0
 }
