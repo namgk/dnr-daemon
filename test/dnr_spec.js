@@ -18,13 +18,73 @@ var should = require("should");
 var clone = require("clone");
 
 var dnr = require("../dnr");
+var flows = require('../flows');
 var testData = require('./dnr_test_data');
 
 describe("dnr tests", function() {
   // before(function() {
   //   dnr.init({deviceId: '1880'});
   // });
+  /*
+  describe('adding flow test', function(){
+    it('add a new flow into local Node-RED process', function(){
+      var currentFlows = testData.test10;
+      var addingFlow = testData.flow0;
+      var expectedFlows = testData.test10AddedFlow0
+      
+      flows.addFlow(addingFlow);
+      var newFlows = flows.getActiveFlows();
+      newFlows.should.be.an.Array.with.lengthOf(expectedFlows.length);
+      
+      var noOfTabs = 0;
+      var noOfInjects = 0;
+      var noOfSubflow1 = 0;
+      var noOfSubflow1Type = 0;
+      var subflow1Id = '';
+      var subflow1Wires = '';
+      var subflow1Out = 0;
+      var subflow1Out0Wires = 0;
+      var subflow1Out0WiresInjectId = '';
+      var subflow1Out0WiresInject = 0;
+      
+      for (var i = 0; i < newFlows.length; i++){
+        if (newFlows[i].type === 'tab')
+          noOfTabs++;
+          
+        if (newFlows[i].type === 'inject')
+          noOfInjects++;
+          
+        if (newFlows[i].name === 'Subflow 1'){
+          noOfSubflow1++;
+          subflow1Id = newFlows[i].id;
+          subflow1Out = newFlows[i].out.length;
+          subflow1Out.should.equal(1, 'Subflow 1 should have 1 -Out- node');
+          subflow1Out0Wires = subflow1Out[0].wires.length;
+          subflow1Out0Wires.should.equal(1, 'Subflow 1 out wires should have 1 wire');
+          subflow1Out0WiresInjectId = subflow1Out[0].wires[0].id;
+        }
+      }
+      
+      for (var i = 0; i < newFlows.length; i++){
+        if (newFlows[i].type === 'subflow:' + subflow1Id)
+          noOfSubflow1Type++;
+          
+        if (newFlows[i].id === subflow1Out0WiresInjectId)
+          subflow1Out0WiresInject++;
+      }
+      
+      noOfTabs.should.equal(3, 'newFlows should have 3 flows');
+      noOfInjects.should.equal(3, 'newFlows should have 3 injects');
+      noOfSubflow1.should.equal(1, 'newFlows should have 1 -Subflow 1- node');
+      subflow1Out.should.equal(1, 'Subflow 1 should have 1 -Out- node');
+      noOfSubflow1Type.should.equal(1, 'newFlows should have 1 -subflow:<subflow-1-id>- node');
+      subflow1Out0WiresInject.should.equal(1, 'Subflow 1 should have 1 inject wire');
 
+
+      
+    })
+  });
+*/
   describe("forwardWires tests", function() {
     it('parse a config into a map of nodes and their outputs',function() {
       var forwardWires = dnr.extractForwardWires(testData.test0);

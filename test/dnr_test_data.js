@@ -19,6 +19,12 @@ var testFlows8 = [{"id":"407a0319.bf85fc","label":"Flow 1","type":"tab"},{"id":"
 
 var testFlows9 = [{"id":"5899660e.a76698","label":"Flow 1","type":"tab"},{"id":"86f660c8.7909a","type":"inject","z":"5899660e.a76698","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"x":114,"y":48,"wires":[["6aec314b.9513d"]]},{"id":"d2acd3d1.2d533","type":"debug","z":"5899660e.a76698","name":"","active":true,"console":"false","complete":"false","x":530,"y":66,"wires":[],"constraints":{"1880":{"deviceId":"1880","fill":"#f7dbe4","id":"1880","text":"1880"}}},{"id":"6aec314b.9513d","type":"function","z":"5899660e.a76698","name":"","func":"\nreturn msg;","outputs":"3","noerr":0,"x":297,"y":131,"wires":[["d2acd3d1.2d533"],["475907e7.b8a6f8"],["813f4865.7ec0b8"]],"constraints":{"1880":{"deviceId":"1880","fill":"#f7dbe4","id":"1880","text":"1880"}}},{"id":"475907e7.b8a6f8","type":"debug","z":"5899660e.a76698","name":"","active":true,"console":"false","complete":"false","x":503.5,"y":144,"wires":[],"constraints":{"1880":{"deviceId":"1880","fill":"#f7dbe4","id":"1880","text":"1880"},"1881":{"id":"1881","deviceId":"1881","fill":"#c46170","text":"1881"}}},{"id":"813f4865.7ec0b8","type":"debug","z":"5899660e.a76698","name":"","active":true,"console":"false","complete":"false","x":485.5,"y":219,"wires":[]}];
 
+var testFlows10 = [{"type":"tab","id":"bc524b0b.dc4098","label":"Flow 1"},{"type":"tab","id":"9f44707d.1f1d1","label":"Flow 2"},{"id":"5028931e.c56e3c","type":"subflow","name":"Congestion detection","info":"","in":[],"out":[{"x":160,"y":30,"wires":[{"id":"9f1f0701.9c8f88","port":0}]}]},{"id":"b99a81f7.f02ac","type":"inject","z":"bc524b0b.dc4098","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"x":160,"y":64,"wires":[["a52ead95.37606"]]},{"id":"a52ead95.37606","type":"debug","z":"bc524b0b.dc4098","name":"","active":true,"console":"false","complete":"false","x":350,"y":103,"wires":[]},{"id":"9f1f0701.9c8f88","type":"inject","z":"5028931e.c56e3c","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"x":156,"y":76,"wires":[[]]},{"id":"7bc65dbc.cda9b4","type":"subflow:5028931e.c56e3c","z":"9f44707d.1f1d1","x":209,"y":32,"wires":[[]]}];
+
+var flow0 = [{"id":"6821acf6.e73c44","type":"subflow","name":"Subflow 1","info":"","in":[],"out":[{"x":160,"y":30,"wires":[{"id":"b6d6697.dcd4898","port":0}]}]},{"id":"b6d6697.dcd4898","type":"inject","z":"6821acf6.e73c44","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"x":92,"y":88,"wires":[[]]},{"id":"714d1966.ca2f28","type":"subflow:6821acf6.e73c44","z":"509acbbe.9ca714","x":161,"y":85,"wires":[[]]}];
+
+var test10AddedFlow0 = [{"type":"tab","id":"bc524b0b.dc4098","label":"Flow 1"},{"type":"tab","id":"9f44707d.1f1d1","label":"Flow 2"},{"type":"tab","id":"bfa1693.78d5898","label":"Flow 3"},{"id":"5028931e.c56e3c","type":"subflow","name":"Congestion detection","info":"","in":[],"out":[{"x":160,"y":30,"wires":[{"id":"9f1f0701.9c8f88","port":0}]}]},{"id":"bd7a86a9.9269b8","type":"subflow","name":"Subflow 1","info":"","in":[],"out":[{"x":160,"y":30,"wires":[{"id":"1d27428d.a504ad","port":0}]}]},{"id":"b99a81f7.f02ac","type":"inject","z":"bc524b0b.dc4098","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"x":160,"y":64,"wires":[["a52ead95.37606"]]},{"id":"a52ead95.37606","type":"debug","z":"bc524b0b.dc4098","name":"","active":true,"console":"false","complete":"false","x":350,"y":103,"wires":[]},{"id":"9f1f0701.9c8f88","type":"inject","z":"5028931e.c56e3c","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"x":156,"y":76,"wires":[[]]},{"id":"7bc65dbc.cda9b4","type":"subflow:5028931e.c56e3c","z":"9f44707d.1f1d1","x":209,"y":32,"wires":[[]]},{"id":"1d27428d.a504ad","type":"inject","z":"bd7a86a9.9269b8","name":"","topic":"","payload":"","payloadType":"date","repeat":"","crontab":"","once":false,"x":92,"y":88,"wires":[[]]},{"id":"e476b8e1.400198","type":"subflow:bd7a86a9.9269b8","z":"bfa1693.78d5898","x":223,"y":67,"wires":[[]]}];
+
 module.exports = {
     test0: testFlows0,
     test1: testFlows1,
@@ -29,5 +35,8 @@ module.exports = {
     test6: testFlows6,
     test7: testFlows7,
     test8: testFlows8,
-    test9: testFlows9
+    test9: testFlows9,
+    test10: testFlows10,
+    flow0: flow0,
+    test10AddedFlow0: te
 }
