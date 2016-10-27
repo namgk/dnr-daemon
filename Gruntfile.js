@@ -37,7 +37,7 @@ module.exports = function(grunt) {
                 ui: 'bdd',
                 reporter: 'spec'
             },
-            dnr: { src: ["test/dnr_spec.js"]}
+            dnr: { src: ["test/*_spec.js"]}
         },
         jshint: {
             options: {
