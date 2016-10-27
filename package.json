@@ -5,7 +5,7 @@
   "main": "dnr.js",
   "scripts": {
     "test": "grunt test-dnr",
-    "start": "node dnr"
+    "start": "node src/index"
   },
   "repository": {
     "type": "git",
@@ -23,8 +23,11 @@
   "homepage": "https://github.com/namgk/dnr-daemon#readme",
   "dependencies": {
     "clone": "^1.0.2",
+    "firebase": "^3.1.0",
     "follow-redirects": "0.0.7",
-    "mqtt": "^1.7.0"
+    "kb-logger": "^1.1.1",
+    "mqtt": "^1.7.0",
+    "q": "^1.4.1"
   },
   "devDependencies": {
     "grunt": "0.4.5",

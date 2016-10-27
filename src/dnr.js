@@ -1,10 +1,17 @@
-var settings = require('./settings');
 var clone = require("clone");
 var http = require("follow-redirects").http;
 var https = require("follow-redirects").https;
 var urllib = require("url");
+
 var mqtt = require('mqtt');
 var client = mqtt.connect('mqtt://test.mosquitto.org');
+
+var settings = require('./config');
+var nodeFactory = require('./nodeFactory');
+var utils = require('./utils');
+
+var DEVICE_ID = settings.DEVICE_ID;
+var LOCAL_NODERED = settings.LOCAL_NODERED;
 
 client.on('connect', function () {
   console.log('DEBUG: DNR Daemon subscribing to "dnr-new-flows"')
@@ -15,73 +22,12 @@ client.on('message', function (topic, message) {
   var flowsUrl = message.toString();
   console.log('DEBUG: downloading config from ' + flowsUrl);
   downloadConfig(flowsUrl, function(config){
-    console.log('DEBUG: redeploying config to ' + settings.localNodeRED);
-    redeployConfig(dnrizeConfig(JSON.parse(config)), settings.localNodeRED + '/flows');
+    console.log('DEBUG: redeploying config to ' + LOCAL_NODERED);
+    var dnrizedConfig = dnrizeConfig(JSON.parse(config));
+    console.log(JSON.stringify(dnrizedConfig));
+    redeployConfig(dnrizedConfig, LOCAL_NODERED + '/flows');
   })
 });
-
-function DnrComm(){
-  return {
-    getBroker: function(){
-      return this.broker;
-    },
-    getMqttIn: function(){
-      return this.mqttIn;
-    },
-    getMqttOut: function(){
-      return this.mqttOut;
-    },
-    broker: {
-      "birthPayload": "",
-      "birthQos": "0",
-      "birthRetain": null,
-      "birthTopic": "",
-      "broker": "localhost",
-      "cleansession": true,
-      "clientid": "",
-      "compatmode": true,
-      "credentials": {
-          "password": "",
-          "user": ""
-      },
-      "id": "dnr.system_node",
-      "keepalive": "15",
-      "port": "1883",
-      "type": "mqtt-broker",
-      "usetls": false,
-      "verifyservercert": true,
-      "willPayload": "",
-      "willQos": "0",
-      "willRetain": null,
-      "willTopic": "",
-      "z": ""
-    },
-    mqttIn: {
-      "broker": "dnr.system_node",
-      "id": "",
-      "name": "",
-      "topic": "",
-      "type": "mqtt in",
-      "wires": [[]],
-      "x": 0,
-      "y": 0,
-      "z": ""
-    },
-    mqttOut: {
-      "broker": "dnr.system_node",
-      "id": "",
-      "name": "",
-      "qos": "",
-      "retain": "",
-      "topic": "",
-      "type": "mqtt out",
-      // "wires": [[]],
-      "x": 0,
-      "y": 0,
-      "z": ""
-    }
-  }
-}
 
 //TODO: ignore dnr wires
 function extractReverseWires(config){
@@ -138,40 +84,10 @@ function extractForwardWires(config){
   return forwardWires;
 }
 
-function generateId(){
-  return (1+Math.random()*4294967295).toString(16);
-}
-
-function makeMqttOut(node, nodeOutput, nodeOutputWire){
-  var newMqttOut = DnrComm().getMqttOut();
-  newMqttOut.id = 'dnr.' + generateId();
-  newMqttOut.x = node.x + 20;
-  newMqttOut.y = node.y + 20;
-  newMqttOut.z = node.z;
-  newMqttOut.topic = node.id + '-' + nodeOutput + '-' + nodeOutputWire;
-
-  node.wires[nodeOutput].push(newMqttOut.id);
-
-  return newMqttOut;
-}
-
-function makeMqttIn(node, nodeInputOutput, nodeInput){
-  var newMqttIn = DnrComm().getMqttIn();;
-  newMqttIn.id = 'dnr.' + generateId();
-  newMqttIn.x = node.x - 20;
-  newMqttIn.y = node.y - 20;
-  newMqttIn.z = node.z;
-  newMqttIn.topic = nodeInput.id + '-' + nodeInputOutput + '-' + node.id;
-
-  newMqttIn.wires[0].push(node.id);
-
-  return newMqttIn;
-}
-
 function dnrizeConfig(_config){
   var config = clone(_config);
 
-  var newMqtts = [];
+  var newDnrs = [];
   var dnrnodes = {};
   var reverseWires = extractReverseWires(config);
   var forwardWires = extractForwardWires(config);
@@ -179,6 +95,7 @@ function dnrizeConfig(_config){
   for (var j = 0; j < config.length; j++){
     var node = config[j];
     if (node.constraints && !satisfyConstraints(node.constraints) && Object.keys(node.constraints).length != 0){
+      // replace with DNRNode
       node.type = 'dnr';
       dnrnodes[node.id] = 1;
     }
@@ -205,8 +122,8 @@ function dnrizeConfig(_config){
           if (nodeInputs[i].wires[k][m] !== node.id)
             continue;
 
-          var newMqttIn = makeMqttIn(node, k, nodeInputs[i]);
-          newMqtts.push(newMqttIn);
+          var newDnrIn = nodeFactory.makeDnrIn(node, k, nodeInputs[i]);
+          newDnrs.push(newDnrIn);
           
         }
       }
@@ -220,16 +137,16 @@ function dnrizeConfig(_config){
         if (dnrnodes[outputI[k]])
           continue;
 
-        var newMqttOut = makeMqttOut(node, i, outputI[k]);
-        newMqtts.push(newMqttOut);
+        var newDnrOut = nodeFactory.makeDnrOut(node, i, outputI[k]);
+        newDnrs.push(newDnrOut);
       }
     }
   }
 
-  config.push(DnrComm().getBroker());
+  config.push(nodeFactory.DnrComm().getBroker());// config node for mqtt
 
-  for (var i = 0; i < newMqtts.length; i++)
-    config.push(newMqtts[i]);
+  for (var i = 0; i < newDnrs.length; i++)
+    config.push(newDnrs[i]);
 
   return config;
 }
@@ -277,30 +194,28 @@ function redeployConfig(dnrizedConfig, nrEndpoint){
     console.log(err);
   });
 
-  if (payload)
+  if (payload){
     req.write(payload);
+  }
 
   req.end();
 }
 
 function satisfyConstraints(constraints){
-	// TODO: implement this logic!
+  // TODO: implement this logic!
   for (var c in constraints){
     if (!constraints.hasOwnProperty(c))
       continue;
 
-  	if (constraints[c].deviceId && constraints[c].deviceId === settings.deviceId)
-  			return true;
+    if (constraints[c].deviceId && constraints[c].deviceId === DEVICE_ID)
+        return true;
   }
-	return false;
+  return false;
 }
 
 module.exports = {
   dnrizeConfig: dnrizeConfig,
   redeployConfig: redeployConfig,
-  DnrComm: DnrComm,
   extractReverseWires: extractReverseWires,
-  extractForwardWires: extractForwardWires,
-  makeMqttIn: makeMqttIn,
-  makeMqttOut: makeMqttOut
+  extractForwardWires: extractForwardWires
 }

@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
+"use strict";
 
 var should = require("should");
 var clone = require("clone");
-
-var dnr = require("../dnr");
-var testData = require('./dnr_test_data');
+var fs = require('fs');
+var dnr = require("../src/dnr");
+var file = fs.readFileSync("./test/test_flows.json");
+var tests = JSON.parse(file);
 
 describe("dnr tests", function() {
-  // before(function() {
-  //   dnr.init({deviceId: '1880'});
-  // });
-
   describe("forwardWires tests", function() {
     it('parse a config into a map of nodes and their outputs',function() {
-      var forwardWires = dnr.extractForwardWires(testData.test0);
+      var forwardWires = dnr.extractForwardWires(tests[0].input);
 
       forwardWires.should.have.a.property('43277438.bcd88c');
       forwardWires.should.have.a.property('145363b5.ebac9c');
@@ -53,7 +51,7 @@ describe("dnr tests", function() {
 
   describe("reverseWires tests", function() {
     it('parse a config into a map of nodes and their inputs',function() {
-      var reverseWires = dnr.extractReverseWires(testData.test0);
+      var reverseWires = dnr.extractReverseWires(tests[0].input);
 
       reverseWires.should.not.have.a.property('43277438.bcd88c');
       reverseWires.should.not.have.a.property('1c5f02c8.e3a0fd');
@@ -73,34 +71,12 @@ describe("dnr tests", function() {
   });
 
   describe("dnrizing tests", function() {
-    it('dnrized config should contain a mqtt broker config, and necessary mqtt ins and outs',function() {
-      
-      var dnrizedConfig = dnr.dnrizeConfig(testData.test0);
-      dnrizedConfig.should.have.length(11);
-
-      dnrizedConfig = dnr.dnrizeConfig(testData.test1);
-      dnrizedConfig.should.have.length(7);
-
-      dnrizedConfig = dnr.dnrizeConfig(testData.test2);
-      dnrizedConfig.should.have.length(5);
-
-      dnrizedConfig = dnr.dnrizeConfig(testData.test3);
-      dnrizedConfig.should.have.length(7);
-
-      dnrizedConfig = dnr.dnrizeConfig(testData.test4);
-      dnrizedConfig.should.have.length(6);
-
-      dnrizedConfig = dnr.dnrizeConfig(testData.test5);
-      dnrizedConfig.should.have.length(6);
-
-      dnrizedConfig = dnr.dnrizeConfig(testData.test6);
-      dnrizedConfig.should.have.length(7);
-
-      dnrizedConfig = dnr.dnrizeConfig(testData.test8);
-      dnrizedConfig.should.have.length(7);
-
-      dnrizedConfig = dnr.dnrizeConfig(testData.test9);//TODO: weak test
-      dnrizedConfig.should.have.length(13);
-    });
+    for (let i = 0; i < tests.length; i++){
+      let test = tests[i];
+      it(test.description, ()=>{
+        var dnrizedConfig = dnr.dnrizeConfig(test.input);
+        dnrizedConfig.should.have.length(test.outputLength);
+      })
+    }
   });
 });

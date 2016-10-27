@@ -55,7 +55,7 @@ module.exports = function(grunt) {
             },
             all: [
                 'Gruntfile.js',
-                'dnr.js'
+                'src/**/*.js'
             ],
             tests: {
                 files: {
@@ -70,12 +70,12 @@ module.exports = function(grunt) {
         nodemon: {
             /* uses .nodemonignore */
             dev: {
-                script: 'dnr.js',
+                script: 'src/dnr.js',
                 options: {
                     // args: nodemonArgs,
                     ext: 'js',
                     watch: [
-                        'dnr.js'
+                        'src/**/*.js'
                     ]
                 }
             }
