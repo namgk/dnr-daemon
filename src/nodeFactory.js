@@ -1,6 +1,10 @@
 var utils = require('./utils');
 var generateId = utils.generateId;
 
+function Dnr(){
+
+}
+
 function DnrComm(){
   return {
     getBroker: function(){

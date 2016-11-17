@@ -1,12 +1,12 @@
 var should = require("should");
 var clone = require("clone");
 
-var nrAdmin = require('../node-red-admin');
+// var nrAdmin = require('../node-red-admin');
 var utils = require('./test_util');
 var testData = require('./dnr_test_data');
 
 var http = require('http');
-var settings = require('../settings');
+var config = require('../src/config');
 
 describe("dnr node red api tests", function() {
   
@@ -14,7 +14,7 @@ describe("dnr node red api tests", function() {
   
   before(function (done) {
     console.log('backing up');
-     utils.httpGet(settings.localNodeRED + '/flows', function(res){
+     utils.httpGet(config.LOCAL_NODERED + '/flows', function(res){
        if (res){
          backupFlows = res;
          done();
@@ -26,7 +26,7 @@ describe("dnr node red api tests", function() {
   
   after(function(done) {
     console.log('putting things back!');
-    utils.httpPost(settings.localNodeRED + '/flows', backupFlows, function(res){
+    utils.httpPost(config.LOCAL_NODERED + '/flows', backupFlows, function(res){
       console.log(res);
       done();
     })
@@ -35,19 +35,6 @@ describe("dnr node red api tests", function() {
   describe('deploying flow api test', function(){
     it('deploy new flows to local Node-RED process', function(){
       var deployingFlows = testData.test10;
-      nrAdmin.deployFlows(deployingFlows);
-      
-      // http.get(settings.localNodeRED + '/flows', function(response) {
-      //   var str = '';
-      
-      //   response.on('data', function (chunk) {
-      //     str += chunk;
-      //   });
-      
-      //   response.on('end', function () {
-      //     str.should.be.equal(JSON.stringify(deployingFlows));
-      //   });
-      // });
     })
   });
   

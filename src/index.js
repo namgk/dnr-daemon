@@ -1,4 +1,4 @@
-var db = require("./firebase");
+var db = require("./db");
 var config = require('./config');
 var cache = require('./cache');
 var dnr = require('./dnr');
@@ -7,6 +7,9 @@ var Log = require('kb-logger');
 var log = Log.createLogger('DNR-Daemon');
 log.setFile(config.LOG_FILE);
 log.setLevel(config.LOG_LEVEL);
+
+// start context engine - acquisition, upload, query
+// look at flow, checking context, register ctx query
 
 // update device context with tracker
 setInterval(()=>{
