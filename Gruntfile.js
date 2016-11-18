@@ -17,15 +17,57 @@
 var path = require("path");
 
 module.exports = function(grunt) {
-
-    var nodemonArgs = ["-v"];
-    var flowFile = grunt.option('flowFile');
-    if (flowFile) {
-        nodemonArgs.push(flowFile);
-    }
+    grunt.loadNpmTasks('grunt-ts');
+    grunt.loadNpmTasks('grunt-simple-mocha');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-concurrent');
+    grunt.loadNpmTasks('grunt-sass');
+    grunt.loadNpmTasks('grunt-nodemon');
+    grunt.loadNpmTasks('grunt-contrib-compress');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-chmod');
+    grunt.loadNpmTasks('grunt-jsonlint');
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        clean: {
+            test : [
+                "build/test"
+            ]
+        },
+        ts: {
+            default: {
+                files: [
+                    {
+                        src: ['lib/**/*.ts'],
+                        dest: 'build/dist/'
+                    }
+                ],
+                options: {
+                    module: 'commonjs',
+                    target: 'es5'
+                }
+            },
+            test : {
+                options: {
+                    module : "commonjs"
+                },
+                files: [{
+                    dest: "build/test/",
+                    src: [
+                        "test/**/*_spec.ts"
+                    ]
+                }]
+            }
+        },
+        watch: {
+            files: '**/*.ts',
+            tasks: ['typescript']
+        },
         paths: {
             dist: ".dist"
         },
@@ -35,9 +77,14 @@ module.exports = function(grunt) {
                 timeout: 3000,
                 ignoreLeaks: false,
                 ui: 'bdd',
-                reporter: 'spec'
+                reporter: 'mochawesome',
+                reporterOptions: {
+                    reportDir: 'test-report',
+                    reportName: 'dnr tests',
+                    reportTitle: 'DNR Tests'
+                }
             },
-            dnr: { src: ["test/*_spec.js"]}
+            test: { src: ["build/test/*_spec.js"]}
         },
         jshint: {
             options: {
@@ -91,23 +138,9 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.loadNpmTasks('grunt-simple-mocha');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-concurrent');
-    grunt.loadNpmTasks('grunt-sass');
-    grunt.loadNpmTasks('grunt-nodemon');
-    grunt.loadNpmTasks('grunt-contrib-compress');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-chmod');
-    grunt.loadNpmTasks('grunt-jsonlint');
-
-    grunt.registerTask('test-dnr',
-        'Runs unit tests on dnr',
-        ['simplemocha:dnr']);
+    grunt.registerTask('test',
+        'Runs unit tests',
+        ['ts:test','simplemocha:test']);
 
     grunt.registerTask('dev',
         'Developer mode: run node-red, watch for source changes and build/restart',
