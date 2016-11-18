@@ -20,17 +20,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-ts');
     grunt.loadNpmTasks('grunt-simple-mocha');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-concurrent');
-    grunt.loadNpmTasks('grunt-sass');
-    grunt.loadNpmTasks('grunt-nodemon');
-    grunt.loadNpmTasks('grunt-contrib-compress');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-chmod');
-    grunt.loadNpmTasks('grunt-jsonlint');
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -43,7 +34,7 @@ module.exports = function(grunt) {
             default: {
                 files: [
                     {
-                        src: ['lib/**/*.ts'],
+                        src: ['src/**/*.ts'],
                         dest: 'build/dist/'
                     }
                 ],
@@ -112,32 +103,9 @@ module.exports = function(grunt) {
 					"expr": true
                 }
             }
-        },
-
-        nodemon: {
-            /* uses .nodemonignore */
-            dev: {
-                script: 'src/dnr.js',
-                options: {
-                    // args: nodemonArgs,
-                    ext: 'js',
-                    watch: [
-                        'src/**/*.js'
-                    ]
-                }
-            }
-        },
-
-        concurrent: {
-            dev: {
-                tasks: ['nodemon'],
-                options: {
-                    logConcurrentOutput: true
-                }
-            }
         }
     });
-
+    
     grunt.registerTask('test',
         'Runs unit tests',
         ['ts:test','simplemocha:test']);
@@ -145,4 +113,5 @@ module.exports = function(grunt) {
     grunt.registerTask('dev',
         'Developer mode: run node-red, watch for source changes and build/restart',
         ['concurrent:dev']);
+
 };
