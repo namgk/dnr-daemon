@@ -33,14 +33,6 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    concurrent: {
-        build: {
-            tasks: ['ts:src', 'ts:test'],
-            options: {
-                logConcurrentOutput: true
-            }
-        }
-    },
     clean: {
       all : [
         "build/",
@@ -70,7 +62,7 @@ module.exports = function(grunt) {
     simplemocha: {
       options: {
         globals: ['expect'],
-        timeout: 5000,
+        timeout: 7000,
         ignoreLeaks: false,
         ui: 'bdd',
         reporter: 'mochawesome',
@@ -104,10 +96,6 @@ module.exports = function(grunt) {
   grunt.registerTask('test',
     'Runs unit tests',
     ['build','simplemocha:test']);
-
-  grunt.registerTask('dev',
-    'Developer mode: run node-red, watch for source changes and build/restart',
-    ['concurrent:dev']);
 
   grunt.registerTask('build',
     'Compile typescript',

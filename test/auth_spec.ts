@@ -1,20 +1,23 @@
 import Auth from '../src/auth';
+import fs = require('fs');
 
 import {expect} from 'chai';
 
 describe("Test Auth", function () {
-  beforeEach(function () {});
-
-  afterEach(function () {});
+  before(function () {
+    if (!fs.existsSync(process.env.HOME+ '/.dnr-daemon')){
+      fs.mkdirSync(process.env.HOME+ '/.dnr-daemon');
+    }
+  })
 
   it("authenticates", function (done) {
-    let auth = new Auth('http://seawolf1.westgrid.ca:1880', 'admin', 'test');
-    auth.auth().then((r)=>{
-      console.log('e1')
+    let auth = new Auth('http://seawolf1.westgrid.ca:1880', 'admin', process.env.NRPWD);
+    auth.probeAuth().then(r=>{
+      console.log('login successfully, token: ' + auth.getToken())
       done()
     }).catch(function(e){
-      console.log('e')
-      done(false)
+      console.log('error: ' + e)
+      done('error')
     })
   });
 })

@@ -1,10 +1,13 @@
 import request = require('request');
 import assert = require('assert');
+import fs = require('fs');
 
 export default class Auth {
   nodeRedHost: string
   username: string
   password: string
+  token: string
+  private static DNR_HOME: string = process.env.HOME+ '/.dnr-daemon'
   private static TOKEN_PATH: string = '/auth/token'
   private static A_PRIVATE_RESOURCE: string = '/settings'
 
@@ -12,23 +15,61 @@ export default class Auth {
     this.nodeRedHost = host;
     this.username = username;
     this.password = password;
+
+    let obj = this
+    try {
+      obj.token = fs.readFileSync(Auth.DNR_HOME + '/token', 'utf8');
+      obj.probeAuth().then((r)=>{
+      }).catch((e)=>{
+        obj.auth()
+      })
+    } catch (e){}
   }
 
-  public auth(): Promise<boolean> {
+  public getToken(): string {
+    return this.token
+  }
+
+  public getHost(): string {
+    return this.nodeRedHost
+  }
+
+  public probeAuth(): Promise<boolean> {
     let obj = this
     return new Promise<boolean>(function(f,r){
       const opt: request.OptionsWithUri = {
         baseUrl: obj.nodeRedHost,
+        uri: Auth.A_PRIVATE_RESOURCE,
+        headers: {'Authorization' : 'Bearer ' + obj.token}
+      };
+
+      request.get(opt, (er, res, body) => {
+        f(true)
+      })
+    })
+  }
+
+  public auth(): Promise<string> {
+    let obj = this
+    return new Promise<string>(function(f,r){
+      if (obj.token){
+        f(obj.token)
+      }
+
+      const opt: request.OptionsWithUri = {
+        baseUrl: obj.nodeRedHost,
         uri: Auth.TOKEN_PATH,
+        headers: {'content-type' : 'application/x-www-form-urlencoded'},
         body: 'client_id=node-red-admin&grant_type=password&scope=*&username=' + obj.username + '&password=' + obj.password
       };
 
       request.post(opt, (er, res, body) => {
-        console.log("1111")
         if (!er && body != 'Unauthorized'){
-          f(true)
+          obj.token = JSON.parse(body).access_token
+          fs.writeFileSync(Auth.DNR_HOME + '/token', obj.token);
+          f(obj.token)
         } else {
-          f(er)
+          r(er)
         }
       })
     })
