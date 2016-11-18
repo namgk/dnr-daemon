@@ -6,7 +6,7 @@
   "scripts": {
     "test": "grunt test",
     "start": "node build/dist/index.js",
-    "build": "grunt ts:default",
+    "build": "grunt build",
     "clean": "rm -rf node_module; rm -rf build; rm -rf test-report"
   },
   "repository": {
@@ -24,10 +24,13 @@
   },
   "homepage": "https://github.com/namgk/dnr-daemon#readme",
   "dependencies": {
+    "@types/core-js": "^0.9.34",
+    "@types/request": "0.0.33",
     "clone": "^1.0.2",
     "follow-redirects": "^1.1.0",
     "kb-logger": "^1.1.1",
-    "q": "^1.4.1"
+    "q": "^1.4.1",
+    "request": "^2.78.0"
   },
   "devDependencies": {
     "@types/chai": "^3.4.34",
@@ -36,9 +39,11 @@
     "chai": "^3.5.0",
     "grunt": "^1.0.1",
     "grunt-cli": "^1.2.0",
+    "grunt-concurrent": "^2.3.1",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-jshint": "^0.12.0",
     "grunt-contrib-watch": "^1.0.0",
+    "grunt-newer": "^1.2.0",
     "grunt-simple-mocha": "0.4.1",
     "grunt-ts": "^6.0.0-beta.3",
     "mocha": "2.3.4",
