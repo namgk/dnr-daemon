@@ -22,7 +22,10 @@ export default class Dnr {
     var addingDnrNodes : any[] = []
     var dnrGateway = {
       id: Utils.generateId(),
-      config: {status: 'not implemented!'},
+      config: {
+        status: 'not implemented!',
+        flow: original
+      },
       z: dnrized.id,
       type: 'dnr-gateway'
     }

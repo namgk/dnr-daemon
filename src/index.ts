@@ -21,7 +21,7 @@ auth.probeAuth().then(r=>{
 })
 
 function main(){
-  flowsApi.getFlow('afa3b089.d9122').then(r=>{
+  flowsApi.getFlow('1c925984.e34566').then(r=>{
     return JSON.parse(r)
   }).then(function(flow){
     var renamed : any = {}
