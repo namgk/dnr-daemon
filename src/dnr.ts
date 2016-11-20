@@ -24,7 +24,7 @@ export default class Dnr {
       id: Utils.generateId(),
       config: {
         status: 'not implemented!',
-        flow: original
+        flow: 'should be dnrized flow'
       },
       z: dnrized.id,
       type: 'dnr-gateway'
@@ -52,11 +52,21 @@ export default class Dnr {
       }
     }
 
+    // adding new dnr nodes to the config
+    // dnr gateway (configuration of dnr nodes) needs to contain
+    // the dnrized flow with dnr nodes, this will exclude itself
+
+    // step 1
+    dnrized.nodes = nodesList.concat(addingDnrNodes)
+
+    // step 2
+    dnrGateway.config.flow = JSON.parse(JSON.stringify(dnrized))
+
+    // step 3: in case no dnr node to be added, skip adding the gateway
     if (addingDnrNodes.length > 0){
-      addingDnrNodes.push(dnrGateway)
+      dnrized.nodes.push(dnrGateway)
     }
 
-    dnrized.nodes = nodesList.concat(addingDnrNodes)
     return dnrized
   }
 }

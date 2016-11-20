@@ -20,6 +20,10 @@ export default class FlowsAPI {
     };
   }
 
+  public setAuth(auth: Auth){
+    this.auth = auth
+  }
+
   public getFlow(id: string): Promise<string> {
     let obj = this
     return new Promise<string>(function(f,r){

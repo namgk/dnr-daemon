@@ -4,6 +4,7 @@ import fs = require('fs');
 
 export default class Auth {
   nodeRedHost: string
+  hostString: string
   username: string
   password: string
   token: string
@@ -15,10 +16,11 @@ export default class Auth {
     this.nodeRedHost = host;
     this.username = username;
     this.password = password;
+    this.hostString = host.split('//')[1].replace(':','_')
 
     let obj = this
     try {
-      obj.token = fs.readFileSync(Auth.DNR_HOME + '/token', 'utf8');
+      obj.token = fs.readFileSync(Auth.DNR_HOME + '/token_' + this.hostString, 'utf8');
     } catch (e){}
   }
 
@@ -66,7 +68,7 @@ export default class Auth {
       request.post(opt, (er, res, body) => {
         if (!er && body != 'Unauthorized'){
           obj.token = JSON.parse(body).access_token
-          fs.writeFileSync(Auth.DNR_HOME + '/token', obj.token);
+          fs.writeFileSync(Auth.DNR_HOME + '/token_' + obj.hostString, obj.token);
           f(obj.token)
         } else {
           r(er)

@@ -6,22 +6,39 @@ import Settings from './settings';
 
 // let = block
 
-let auth = new Auth(Settings.TARGET, Settings.USER, Settings.PASS);
-var flowsApi: FlowsAPI = null
-auth.probeAuth().then(r=>{
-  flowsApi = new FlowsAPI(auth)
-  main()
-}).catch(e=>{
-  auth.auth().then(r=>{
-    flowsApi = new FlowsAPI(auth)
-    main()
-  }).catch(e=>{
-    throw "cannot authenticate!! " + e;
-  })
-})
+var auth = new Auth(Settings.TARGET, Settings.USER, Settings.PASS);
+var upstreamAuth = new Auth(Settings.UPSTREAM, Settings.UPSTREAM_USER, Settings.UPSTREAM_PASS);
+
+var flowsApi: FlowsAPI = new FlowsAPI(auth)
+var upstreamFlowsApi: FlowsAPI = new FlowsAPI(upstreamAuth)
+
+main()
+// auth.probeAuth().then(r=>{
+//   flowsApi.setAuth(auth)
+//   main()
+// }).catch(e=>{
+//   auth.auth().then(r=>{
+//     flowsApi.setAuth(auth)
+//     main()
+//   }).catch(e=>{
+//     throw "cannot authenticate!! " + e;
+//   })
+// })
+
+// upstreamAuth.probeAuth().then(r=>{
+//   upstreamFlowsApi.setAuth(upstreamAuth)
+//   main()
+// }).catch(e=>{
+//   upstreamAuth.auth().then(r=>{
+//     upstreamFlowsApi.setAuth(upstreamAuth)
+//     main()
+//   }).catch(e=>{
+//     throw "cannot authenticate!! " + e;
+//   })
+// })
 
 function main(){
-  flowsApi.getFlow('1c925984.e34566').then(r=>{
+  upstreamFlowsApi.getFlow('eb379cd6.49ee9').then(r=>{
     return JSON.parse(r)
   }).then(function(flow){
     var renamed : any = {}
