@@ -12,7 +12,6 @@ export default class Dnr {
 
     // mapify
     var nodesMap : Map<string,any> = new Map<string, any>()
-
     for (let node of nodesList){
       let nodeId = node.id
       if (!nodesMap.get(nodeId)){
@@ -21,12 +20,17 @@ export default class Dnr {
     }
 
     var addingDnrNodes : any[] = []
+    var dnrGateway = {
+      id: Utils.generateId(),
+      config: {status: 'not implemented!'},
+      z: dnrized.id,
+      type: 'dnr-gateway'
+    }
 
     for (let node of nodesList){
       let nodeId = node.id
-      let nodeWires = node.wires
 
-      for (let wires of nodeWires){
+      for (let wires of node.wires){
         for (let i = 0; i < wires.length; i++){
           let dnrNode = {
             id: Utils.generateId(),
@@ -34,6 +38,7 @@ export default class Dnr {
             z: node.z,
             wires:[[wires[i]]],
             input: nodeId,
+            gateway: dnrGateway.id,
             x: Math.round( (node.x + nodesMap.get(wires[i]).x) / 2 ),
             y: Math.round( (node.y + nodesMap.get(wires[i]).y) / 2 )
           }
@@ -42,6 +47,10 @@ export default class Dnr {
           addingDnrNodes.push(dnrNode)
         }
       }
+    }
+
+    if (addingDnrNodes.length > 0){
+      addingDnrNodes.push(dnrGateway)
     }
 
     dnrized.nodes = nodesList.concat(addingDnrNodes)

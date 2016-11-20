@@ -470,5 +470,146 @@
         "z": "ee9eb93b.35e2d8"
       }
     ]
+  },
+  "complex": {
+    "id": "1c925984.e34566",
+    "label": "Flow 2",
+    "nodes": [
+      {
+        "func": "return msg;",
+        "id": "de817c84.0eb38",
+        "name": "DB",
+        "noerr": 0,
+        "outputs": 1,
+        "type": "function",
+        "wires": [
+          [
+            "99ed4f6b.3f1be"
+          ]
+        ],
+        "x": 452.5,
+        "y": 278,
+        "z": "1c925984.e34566"
+      },
+      {
+        "active": false,
+        "complete": "true",
+        "console": "false",
+        "id": "cfb92941.33cf78",
+        "name": "Notify",
+        "type": "debug",
+        "wires": [],
+        "x": 773.5,
+        "y": 271,
+        "z": "1c925984.e34566"
+      },
+      {
+        "func": "msg.payload={dev: 'car1'}\nmsg.payload.plate='1P'\n\nreturn msg;",
+        "id": "f0073612.4ddb68",
+        "name": "Cam",
+        "noerr": 0,
+        "outputs": 1,
+        "type": "function",
+        "wires": [
+          [
+            "f70a3a71.714108"
+          ]
+        ],
+        "x": 123.5,
+        "y": 159,
+        "z": "1c925984.e34566"
+      },
+      {
+        "func": "msg.payload.dev='car1'\nmsg.payload.location='test'\nreturn msg;",
+        "id": "435a38fc.f8e568",
+        "name": "Loc",
+        "noerr": 0,
+        "outputs": 1,
+        "type": "function",
+        "wires": [
+          [
+            "99ed4f6b.3f1be"
+          ]
+        ],
+        "x": 380,
+        "y": 45,
+        "z": "1c925984.e34566"
+      },
+      {
+        "func": "var dev = msg.payload.dev;\nvar plate = msg.payload.plate;\nif (dev.split('car')[1] !== plate.split('P')[0]){\n  node.error('mismatch');\n}",
+        "id": "5a8050f6.64d2",
+        "name": "Test",
+        "noerr": 0,
+        "outputs": "0",
+        "type": "function",
+        "wires": [],
+        "x": 767.5,
+        "y": 120,
+        "z": "1c925984.e34566"
+      },
+      {
+        "crontab": "",
+        "id": "ff527685.dabe38",
+        "name": "tick",
+        "once": false,
+        "payload": "{}",
+        "payloadType": "json",
+        "repeat": "1",
+        "topic": "",
+        "type": "inject",
+        "wires": [
+          [
+            "f0073612.4ddb68",
+            "435a38fc.f8e568"
+          ]
+        ],
+        "x": 153.5,
+        "y": 45,
+        "z": "1c925984.e34566"
+      },
+      {
+        "func": "\nreturn msg;",
+        "id": "f70a3a71.714108",
+        "name": "Fog",
+        "noerr": 0,
+        "outputs": 1,
+        "type": "function",
+        "wires": [
+          [
+            "de817c84.0eb38"
+          ]
+        ],
+        "x": 278,
+        "y": 185,
+        "z": "1c925984.e34566"
+      },
+      {
+        "id": "6ab90e23.73483",
+        "info": "",
+        "name": "loc.dev === cam.dev",
+        "type": "comment",
+        "wires": [],
+        "x": 841.5,
+        "y": 184,
+        "z": "1c925984.e34566"
+      },
+      {
+        "func": "var locQueue = context.get('loc')||{};\nvar plateQueue = context.get('plate')||{};\n\nif (msg.payload.location){\n  // push msg to locQueue\n  if (!locQueue[msg.payload.dev]){\n    locQueue[msg.payload.dev] = [msg.payload]\n  } else {\n    locQueue[msg.payload.dev].push(msg.payload)\n  }\n  context.set('loc', locQueue);\n}\n\nif (msg.payload.plate){\n  // push msg to plateQueue\n  if (!plateQueue[msg.payload.dev]){\n    plateQueue[msg.payload.dev] = [msg.payload]\n  } else {\n    plateQueue[msg.payload.dev].push(msg.payload)\n  }\n  context.set('plate', plateQueue);\n}\n\n// merge 2 queue fifo by dev\nvar merged = [];\n\nfor (var dev in locQueue){\n  var devLocs = locQueue[dev];\n  var devPlates = plateQueue[dev];\n  \n  if (!devLocs || !devPlates){\n    continue;\n  }\n  \n  if (devLocs.length === 0 || devPlates.length === 0){\n    continue;\n  }\n\n  while (loc = locQueue[dev].shift()){\n    var plate = plateQueue[dev].shift();\n    if (!plate){\n      break;\n    }\n    merged.push({payload:{\n      dev: dev,\n      location: loc.location,\n      plate: plate.plate\n    }}); \n  }\n  \n}\nif (merged.length){\n  return [merged];\n}",
+        "id": "99ed4f6b.3f1be",
+        "name": "merge by Loc.dev === Cam.dev",
+        "noerr": 0,
+        "outputs": 1,
+        "type": "function",
+        "wires": [
+          [
+            "cfb92941.33cf78",
+            "5a8050f6.64d2"
+          ]
+        ],
+        "x": 563,
+        "y": 157,
+        "z": "1c925984.e34566"
+      }
+    ]
   }
 }

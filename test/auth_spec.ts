@@ -10,14 +10,19 @@ describe("Test Auth", function () {
     }
   })
 
-  it("authenticates", function (done) {
+  it.only("authenticates", function (done) {
     let auth = new Auth('http://seawolf1.westgrid.ca:1880', 'admin', process.env.NRPWD);
     auth.probeAuth().then(r=>{
       console.log('login successfully, token: ' + auth.getToken())
       done()
     }).catch(function(e){
-      console.log('error: ' + e)
-      done('error')
+      auth.auth().then(r=>{
+        console.log('login successfully, token: ' + auth.getToken())
+        done()
+      }).catch(e=>{
+        console.log('error: ' + e)
+        done('error')
+      })
     })
   });
 })

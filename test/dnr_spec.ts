@@ -4,7 +4,7 @@ import {expect} from 'chai';
 import Dnr from '../src/dnr';
 import Utils from '../src/utils'
 
-describe.only("Test Dnr", function () {
+describe("Test Dnr", function () {
   var testData = fs.readFileSync(__dirname + '/../../test/test_data.json', 'utf8')
   var testDataObj = JSON.parse(testData)
 
@@ -13,6 +13,7 @@ describe.only("Test Dnr", function () {
 
     it("correctly dnrize this flow: " + key, function(){
       var dnrized = Dnr.dnrize(test_flow)
+      var dnrGateway : string[]= []
       // mapify
       var originalNodesMap : Map<string,any> = new Map<string, any>()
       for (let node of test_flow.nodes){
@@ -23,6 +24,9 @@ describe.only("Test Dnr", function () {
       }
       var dnrizedNodesMap : Map<string,any> = new Map<string, any>()
       for (let node of dnrized.nodes){
+        if (node.type === 'dnr-gateway'){
+          dnrGateway.push(node.id)
+        }
         let nodeId = node.id
         if (!dnrizedNodesMap.get(nodeId)){
           dnrizedNodesMap.set(nodeId, node)
@@ -54,13 +58,16 @@ describe.only("Test Dnr", function () {
           expect(dnrNode.wires.length).to.equal(1)
           expect(dnrNode.wires[0].length).to.equal(1)
           expect(dnrNode.input).to.equal(sourceNode.id)
+          expect(dnrNode.gateway).to.equal(dnrGateway[0])
 
           if (dnrNode.wires[0][0] === destNode.id){
             noOfDnrNodes++
           }
         }
       }
+      // 1 extra dnr gateway (configuration) node
       expect(noOfDnrNodes).to.equal(pairs.length)
+      expect(dnrGateway.length).to.equal(noOfDnrNodes > 0 ? 1 : 0)
     });
   }
 })

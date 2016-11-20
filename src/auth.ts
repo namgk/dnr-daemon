@@ -19,10 +19,6 @@ export default class Auth {
     let obj = this
     try {
       obj.token = fs.readFileSync(Auth.DNR_HOME + '/token', 'utf8');
-      obj.probeAuth().then((r)=>{
-      }).catch((e)=>{
-        obj.auth()
-      })
     } catch (e){}
   }
 
@@ -37,6 +33,10 @@ export default class Auth {
   public probeAuth(): Promise<boolean> {
     let obj = this
     return new Promise<boolean>(function(f,r){
+      if (!obj.token){
+        return r(true)
+      }
+
       const opt: request.OptionsWithUri = {
         baseUrl: obj.nodeRedHost,
         uri: Auth.A_PRIVATE_RESOURCE,
@@ -44,7 +44,11 @@ export default class Auth {
       };
 
       request.get(opt, (er, res, body) => {
-        f(true)
+        if (res.statusCode == 200){
+          f(true)
+        } else {
+          r(true)
+        }
       })
     })
   }
@@ -52,10 +56,6 @@ export default class Auth {
   public auth(): Promise<string> {
     let obj = this
     return new Promise<string>(function(f,r){
-      if (obj.token){
-        f(obj.token)
-      }
-
       const opt: request.OptionsWithUri = {
         baseUrl: obj.nodeRedHost,
         uri: Auth.TOKEN_PATH,
