@@ -19,10 +19,11 @@ describe("Test Flows", function () {
     })
   })
 
-
   it("install, get and delete flow", function (done) {
-    var testData = fs.readFileSync(__dirname + '/../../test/./flows_data.json', 'utf8')
-    var inject_debug = JSON.parse(testData).inject_debug
+    var testData = fs.readFileSync(__dirname + '/../../test/test_data.json', 'utf8')
+    var testDataObj = JSON.parse(testData)
+    var inject_debug = testDataObj.inject_debug
+
     flowsApi.installFlow(JSON.stringify(inject_debug))
     .then(r=>{
       return JSON.parse(r).id

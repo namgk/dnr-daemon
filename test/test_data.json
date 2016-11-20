@@ -1,0 +1,474 @@
+{ 
+  "inject_debug": {
+    "id": "936f12f9.bde1",
+    "label": "Flow 3",
+    "nodes": [
+      {
+        "crontab": "",
+        "id": "32c99127.1a362f",
+        "name": "",
+        "once": false,
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "topic": "",
+        "type": "inject",
+        "wires": [
+          [
+            "9b058f2.7bb178"
+          ]
+        ],
+        "x": 252,
+        "y": 112,
+        "z": "936f12f9.bde1"
+      },
+      {
+        "active": true,
+        "complete": "false",
+        "console": "false",
+        "id": "9b058f2.7bb178",
+        "name": "",
+        "type": "debug",
+        "wires": [],
+        "x": 479,
+        "y": 114,
+        "z": "936f12f9.bde1"
+      }
+    ]
+  },
+  "inject_only": {
+    "id": "936f12f9.bde1",
+    "label": "Flow 3",
+    "nodes": [
+      {
+        "crontab": "",
+        "id": "32c99127.1a362f",
+        "name": "",
+        "once": false,
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "topic": "",
+        "type": "inject",
+        "wires": [[]],
+        "x": 252,
+        "y": 112,
+        "z": "936f12f9.bde1"
+      }
+    ]
+  },
+  "inject_func_debug": {
+    "id": "ee9eb93b.35e2d8",
+    "label": "Flow 3",
+    "nodes": [
+      {
+        "crontab": "",
+        "id": "55022439.c2cc6c",
+        "name": "",
+        "once": false,
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "topic": "",
+        "type": "inject",
+        "wires": [
+          [
+            "f680375b.a20db8"
+          ]
+        ],
+        "x": 179,
+        "y": 127,
+        "z": "ee9eb93b.35e2d8"
+      },
+      {
+        "active": true,
+        "complete": "false",
+        "console": "false",
+        "id": "83e2f4.522a1d1",
+        "name": "",
+        "type": "debug",
+        "wires": [],
+        "x": 494,
+        "y": 126,
+        "z": "ee9eb93b.35e2d8"
+      },
+      {
+        "func": "\nreturn msg;",
+        "id": "f680375b.a20db8",
+        "name": "",
+        "noerr": 0,
+        "outputs": 1,
+        "type": "function",
+        "wires": [
+          [
+            "83e2f4.522a1d1"
+          ]
+        ],
+        "x": 329,
+        "y": 128,
+        "z": "ee9eb93b.35e2d8"
+      }
+    ]
+  },
+  "func_debug_debug": {
+    "id": "ee9eb93b.35e2d8",
+    "label": "Flow 3",
+    "nodes": [
+      {
+        "active": true,
+        "complete": "false",
+        "console": "false",
+        "id": "83e2f4.522a1d1",
+        "name": "",
+        "type": "debug",
+        "wires": [],
+        "x": 494,
+        "y": 126,
+        "z": "ee9eb93b.35e2d8"
+      },
+      {
+        "func": "\nreturn msg;",
+        "id": "f680375b.a20db8",
+        "name": "",
+        "noerr": 0,
+        "outputs": 1,
+        "type": "function",
+        "wires": [
+          [
+            "83e2f4.522a1d1",
+            "1f7a6edc.344191"
+          ]
+        ],
+        "x": 218,
+        "y": 126,
+        "z": "ee9eb93b.35e2d8"
+      },
+      {
+        "active": true,
+        "complete": "false",
+        "console": "false",
+        "id": "1f7a6edc.344191",
+        "name": "",
+        "type": "debug",
+        "wires": [],
+        "x": 490.5,
+        "y": 187,
+        "z": "ee9eb93b.35e2d8"
+      }
+    ]
+  },
+  "func_func_debug": {
+    "id": "ee9eb93b.35e2d8",
+    "label": "Flow 3",
+    "nodes": [
+      {
+        "active": true,
+        "complete": "false",
+        "console": "false",
+        "id": "83e2f4.522a1d1",
+        "name": "",
+        "type": "debug",
+        "wires": [],
+        "x": 494,
+        "y": 126,
+        "z": "ee9eb93b.35e2d8"
+      },
+      {
+        "func": "\nreturn msg;",
+        "id": "f680375b.a20db8",
+        "name": "",
+        "noerr": 0,
+        "outputs": 1,
+        "type": "function",
+        "wires": [
+          [
+            "83e2f4.522a1d1"
+          ]
+        ],
+        "x": 218,
+        "y": 126,
+        "z": "ee9eb93b.35e2d8"
+      },
+      {
+        "func": "\nreturn msg;",
+        "id": "9f3ef10b.6f085",
+        "name": "",
+        "noerr": 0,
+        "outputs": 1,
+        "type": "function",
+        "wires": [
+          [
+            "83e2f4.522a1d1"
+          ]
+        ],
+        "x": 218,
+        "y": 201,
+        "z": "ee9eb93b.35e2d8"
+      }
+    ]
+  },
+  "func_func_debug_debug": {
+    "id": "ee9eb93b.35e2d8",
+    "label": "Flow 3",
+    "nodes": [
+      {
+        "active": true,
+        "complete": "false",
+        "console": "false",
+        "id": "83e2f4.522a1d1",
+        "name": "",
+        "type": "debug",
+        "wires": [],
+        "x": 494,
+        "y": 126,
+        "z": "ee9eb93b.35e2d8"
+      },
+      {
+        "func": "\nreturn msg;",
+        "id": "f680375b.a20db8",
+        "name": "",
+        "noerr": 0,
+        "outputs": 1,
+        "type": "function",
+        "wires": [
+          [
+            "83e2f4.522a1d1",
+            "2e50b3a1.ce48cc"
+          ]
+        ],
+        "x": 218,
+        "y": 126,
+        "z": "ee9eb93b.35e2d8"
+      },
+      {
+        "func": "\nreturn msg;",
+        "id": "9f3ef10b.6f085",
+        "name": "",
+        "noerr": 0,
+        "outputs": 1,
+        "type": "function",
+        "wires": [
+          [
+            "83e2f4.522a1d1",
+            "2e50b3a1.ce48cc"
+          ]
+        ],
+        "x": 218,
+        "y": 201,
+        "z": "ee9eb93b.35e2d8"
+      },
+      {
+        "active": true,
+        "complete": "false",
+        "console": "false",
+        "id": "2e50b3a1.ce48cc",
+        "name": "",
+        "type": "debug",
+        "wires": [],
+        "x": 497.5,
+        "y": 201,
+        "z": "ee9eb93b.35e2d8"
+      }
+    ]
+  },
+  "func_2_debug_debug": {
+    "id": "ee9eb93b.35e2d8",
+    "label": "Flow 3",
+    "nodes": [
+      {
+        "active": true,
+        "complete": "false",
+        "console": "false",
+        "id": "83e2f4.522a1d1",
+        "name": "",
+        "type": "debug",
+        "wires": [],
+        "x": 494,
+        "y": 126,
+        "z": "ee9eb93b.35e2d8"
+      },
+      {
+        "func": "\nreturn msg;",
+        "id": "f680375b.a20db8",
+        "name": "",
+        "noerr": 0,
+        "outputs": "2",
+        "type": "function",
+        "wires": [
+          [
+            "83e2f4.522a1d1"
+          ],
+          [
+            "2e50b3a1.ce48cc"
+          ]
+        ],
+        "x": 223,
+        "y": 132,
+        "z": "ee9eb93b.35e2d8"
+      },
+      {
+        "active": true,
+        "complete": "false",
+        "console": "false",
+        "id": "2e50b3a1.ce48cc",
+        "name": "",
+        "type": "debug",
+        "wires": [],
+        "x": 497.5,
+        "y": 201,
+        "z": "ee9eb93b.35e2d8"
+      }
+    ]
+  },
+  "func_2_debug_debug_debug": {
+    "id": "ee9eb93b.35e2d8",
+    "label": "Flow 3",
+    "nodes": [
+      {
+        "active": true,
+        "complete": "false",
+        "console": "false",
+        "id": "83e2f4.522a1d1",
+        "name": "",
+        "type": "debug",
+        "wires": [],
+        "x": 494,
+        "y": 126,
+        "z": "ee9eb93b.35e2d8"
+      },
+      {
+        "func": "\nreturn msg;",
+        "id": "f680375b.a20db8",
+        "name": "",
+        "noerr": 0,
+        "outputs": "2",
+        "type": "function",
+        "wires": [
+          [
+            "83e2f4.522a1d1"
+          ],
+          [
+            "2e50b3a1.ce48cc",
+            "5f6da99c.665418"
+          ]
+        ],
+        "x": 223,
+        "y": 132,
+        "z": "ee9eb93b.35e2d8"
+      },
+      {
+        "active": true,
+        "complete": "false",
+        "console": "false",
+        "id": "2e50b3a1.ce48cc",
+        "name": "",
+        "type": "debug",
+        "wires": [],
+        "x": 497.5,
+        "y": 201,
+        "z": "ee9eb93b.35e2d8"
+      },
+      {
+        "active": true,
+        "complete": "false",
+        "console": "false",
+        "id": "5f6da99c.665418",
+        "name": "",
+        "type": "debug",
+        "wires": [],
+        "x": 502,
+        "y": 279,
+        "z": "ee9eb93b.35e2d8"
+      }
+    ]
+  },
+  "func_2_2_debug": {
+    "id": "ee9eb93b.35e2d8",
+    "label": "Flow 3",
+    "nodes": [
+      {
+        "active": true,
+        "complete": "false",
+        "console": "false",
+        "id": "83e2f4.522a1d1",
+        "name": "",
+        "type": "debug",
+        "wires": [],
+        "x": 489,
+        "y": 88,
+        "z": "ee9eb93b.35e2d8"
+      },
+      {
+        "func": "\nreturn msg;",
+        "id": "f680375b.a20db8",
+        "name": "",
+        "noerr": 0,
+        "outputs": "2",
+        "type": "function",
+        "wires": [
+          [
+            "83e2f4.522a1d1",
+            "2e50b3a1.ce48cc"
+          ],
+          [
+            "2e50b3a1.ce48cc",
+            "83e2f4.522a1d1"
+          ]
+        ],
+        "x": 267,
+        "y": 131,
+        "z": "ee9eb93b.35e2d8"
+      },
+      {
+        "active": true,
+        "complete": "false",
+        "console": "false",
+        "id": "2e50b3a1.ce48cc",
+        "name": "",
+        "type": "debug",
+        "wires": [],
+        "x": 492.5,
+        "y": 176,
+        "z": "ee9eb93b.35e2d8"
+      }
+    ]
+  },
+  "func_func_circular": {
+    "id": "ee9eb93b.35e2d8",
+    "label": "Flow 3",
+    "nodes": [
+      {
+        "func": "\nreturn msg;",
+        "id": "f680375b.a20db8",
+        "name": "",
+        "noerr": 0,
+        "outputs": "1",
+        "type": "function",
+        "wires": [
+          [
+            "d311aab7.71f0d8"
+          ]
+        ],
+        "x": 267,
+        "y": 131,
+        "z": "ee9eb93b.35e2d8"
+      },
+      {
+        "func": "\nreturn msg;",
+        "id": "d311aab7.71f0d8",
+        "name": "",
+        "noerr": 0,
+        "outputs": 1,
+        "type": "function",
+        "wires": [
+          [
+            "f680375b.a20db8"
+          ]
+        ],
+        "x": 268.5,
+        "y": 219,
+        "z": "ee9eb93b.35e2d8"
+      }
+    ]
+  }
+}
