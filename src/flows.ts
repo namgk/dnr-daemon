@@ -11,13 +11,13 @@ export default class FlowsAPI {
   constructor(auth: Auth) {
     this.auth = auth
     this.authOpt = {
-        baseUrl: auth.getHost(),
-        uri: '',
-        headers: {
-          'Authorization' : 'Bearer ' + auth.getToken(),
-          'Content-type' : 'application/json'
-        }
-      };
+      baseUrl: auth.getHost(),
+      uri: '',
+      headers: {
+        'Authorization' : 'Bearer ' + auth.getToken(),
+        'Content-type' : 'application/json'
+      }
+    };
   }
 
   public getFlow(id: string): Promise<string> {
@@ -28,7 +28,7 @@ export default class FlowsAPI {
         if (res.statusCode == 200){
           f(body)
         } else {
-          r(body)
+          r(er + ' - ' + body)
         }
       })
     })
@@ -43,7 +43,7 @@ export default class FlowsAPI {
         if (res.statusCode == 204){
           f(body)
         } else {
-          r(body)
+          r(er + ' - ' + body)
         }
       })
     })
@@ -59,7 +59,7 @@ export default class FlowsAPI {
         if (res.statusCode == 200){
           f(body)
         } else {
-          r(body)
+          r(er + ' - ' + body)
         }
       })
     })

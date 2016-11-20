@@ -1,5 +1,6 @@
 import Auth from '../src/auth';
 import FlowsAPI from '../src/flows';
+import Settings from '../src/settings';
 
 import fs = require('fs');
 
@@ -8,23 +9,41 @@ import {expect} from 'chai';
 describe("Test Flows", function () {
   let auth: Auth = null
   let flowsApi: FlowsAPI = null
+  var testData = fs.readFileSync(__dirname + '/../../test/test_data.json', 'utf8')
+  var testDataObj = JSON.parse(testData)
 
   before(function (done) {
-    auth = new Auth('http://seawolf1.westgrid.ca:1880', 'admin', process.env.NRPWD);
-    auth.probeAuth().then((r)=>{
+    let auth = new Auth(Settings.TARGET, Settings.USER, Settings.PASS);
+    auth.probeAuth().then(r=>{
       flowsApi = new FlowsAPI(auth)
       done()
+    }).catch(function(e){
+      auth.auth().then(r=>{
+        flowsApi = new FlowsAPI(auth)
+        done()
+      }).catch(e=>{
+        done('error')
+      })
+    })
+  })
+
+  it('install, delete flow', function(done){
+    var test_flow = testDataObj.inject_debug
+    flowsApi.installFlow(JSON.stringify(test_flow)).then(r=>{
+      flowsApi.uninstallFlow(JSON.parse(r).id).then(r=>{
+        done()
+      }).catch(e=>{
+        done('error deleting flow ' + e)
+      })
     }).catch(e=>{
-      done('error!')
+      done('error installing flow '+ e)
     })
   })
 
   it("install, get and delete flow", function (done) {
-    var testData = fs.readFileSync(__dirname + '/../../test/test_data.json', 'utf8')
-    var testDataObj = JSON.parse(testData)
-    var inject_debug = testDataObj.inject_debug
+    var test_flow = testDataObj.inject_func_debug
 
-    flowsApi.installFlow(JSON.stringify(inject_debug))
+    flowsApi.installFlow(JSON.stringify(test_flow))
     .then(r=>{
       return JSON.parse(r).id
     })
@@ -38,8 +57,8 @@ describe("Test Flows", function () {
     .then(deleteResult=>{
       done()
     })
-    .catch((e)=>{
-      done('error getting flow'+ e)
+    .catch(e=>{
+      done('error in flow API '+ e)
     })
   });
 })

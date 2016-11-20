@@ -2,9 +2,11 @@ import Auth from './auth';
 import FlowsAPI from './flows';
 import Dnr from './dnr'
 import Utils from './utils'
+import Settings from './settings';
+
 // let = block
 
-var auth: Auth = new Auth('http://seawolf1.westgrid.ca:1880', 'admin', process.env.NRPWD);
+let auth = new Auth(Settings.TARGET, Settings.USER, Settings.PASS);
 var flowsApi: FlowsAPI = null
 auth.probeAuth().then(r=>{
   flowsApi = new FlowsAPI(auth)
@@ -19,7 +21,7 @@ auth.probeAuth().then(r=>{
 })
 
 function main(){
-  flowsApi.getFlow('1c925984.e34566').then(r=>{
+  flowsApi.getFlow('afa3b089.d9122').then(r=>{
     return JSON.parse(r)
   }).then(function(flow){
     var renamed : any = {}
