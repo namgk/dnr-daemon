@@ -57,7 +57,7 @@ describe("Test Dnr", function () {
           expect(dnrNode.type).to.equal('dnr')
           expect(dnrNode.wires.length).to.equal(1)
           expect(dnrNode.wires[0].length).to.equal(1)
-          expect(dnrNode.input).to.equal(sourceNode.id)
+          expect(dnrNode.input).to.equal(sourceNode.id + '_' + sourceOutput)
           expect(dnrNode.gateway).to.equal(dnrGateway[0])
 
           if (dnrNode.wires[0][0] === destNode.id){

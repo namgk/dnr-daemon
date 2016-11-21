@@ -33,14 +33,15 @@ export default class Dnr {
     for (let node of nodesList){
       let nodeId = node.id
 
-      for (let wires of node.wires){
+      for (let output in node.wires){
+        let wires = node.wires[output]
         for (let i = 0; i < wires.length; i++){
           let dnrNode = {
             id: Utils.generateId(),
             type: 'dnr',
             z: node.z,
             wires:[[wires[i]]],
-            input: nodeId,
+            input: nodeId + '_' + output,
             gateway: dnrGateway.id,
             x: Math.round( (node.x + nodesMap.get(wires[i]).x) / 2 ),
             y: Math.round( (node.y + nodesMap.get(wires[i]).y) / 2 )
