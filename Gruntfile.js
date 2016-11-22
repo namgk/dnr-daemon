@@ -17,99 +17,88 @@
 var path = require("path");
 
 module.exports = function(grunt) {
+  grunt.loadNpmTasks('grunt-ts');
+  grunt.loadNpmTasks('grunt-concurrent');
+  grunt.loadNpmTasks('grunt-simple-mocha');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
-    var nodemonArgs = ["-v"];
-    var flowFile = grunt.option('flowFile');
-    if (flowFile) {
-        nodemonArgs.push(flowFile);
-    }
+  // grunt.event.on('watch', function(action, filepath) {
+  //   if (filepath.indexOf('src') != -1)
+  //     grunt.config('ts.src.files.src', filepath);
+  //   if (filepath.indexOf('test') != -1)
+  //     grunt.config('ts.test.files.src', filepath);
+  // });
 
-    grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
-        paths: {
-            dist: ".dist"
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+    clean: {
+      all : [
+        "build/",
+        "src/**/*.js",
+        "test/**/*.js"
+      ]
+    },
+    ts: {
+      all: {
+        options: {
+          fast: "never",
+          module: 'commonjs',
+          target: 'es5',
         },
-        simplemocha: {
-            options: {
-                globals: ['expect'],
-                timeout: 3000,
-                ignoreLeaks: false,
-                ui: 'bdd',
-                reporter: 'spec'
-            },
-            dnr: { src: ["test/*_spec.js"]}
-        },
-        jshint: {
-            options: {
-                jshintrc:true
-                // http://www.jshint.com/docs/options/
-                //"asi": true,      // allow missing semicolons
-                //"curly": true,    // require braces
-                //"eqnull": true,   // ignore ==null
-                //"forin": true,    // require property filtering in "for in" loops
-                //"immed": true,    // require immediate functions to be wrapped in ( )
-                //"nonbsp": true,   // warn on unexpected whitespace breaking chars
-                ////"strict": true, // commented out for now as it causes 100s of warnings, but want to get there eventually
-                //"loopfunc": true, // allow functions to be defined in loops
-                //"sub": true       // don't warn that foo['bar'] should be written as foo.bar
-            },
-            all: [
-                'Gruntfile.js',
-                'src/**/*.js'
-            ],
-            tests: {
-                files: {
-                    src: ['test/**/*.js']
-                },
-                options: {
-					"expr": true
-                }
-            }
-        },
-
-        nodemon: {
-            /* uses .nodemonignore */
-            dev: {
-                script: 'src/dnr.js',
-                options: {
-                    // args: nodemonArgs,
-                    ext: 'js',
-                    watch: [
-                        'src/**/*.js'
-                    ]
-                }
-            }
-        },
-
-        concurrent: {
-            dev: {
-                tasks: ['nodemon'],
-                options: {
-                    logConcurrentOutput: true
-                }
-            }
+        files:{
+          'build/': ['src/**/*.ts', 'test/**/*.ts']
         }
-    });
+      }
+    },
+    watch: {
+      files: '**/*.ts',
+      tasks: ['test']
+    },
+    paths: {
+      dist: ".dist"
+    },
+    simplemocha: {
+      options: {
+        globals: ['expect'],
+        timeout: 15000,
+        ignoreLeaks: false,
+        ui: 'bdd',
+        reporter: 'mochawesome',
+        reporterOptions: {
+          reportDir: 'test-report',
+          reportName: 'dnr tests',
+          reportTitle: 'DNR Tests'
+        }
+      },
+      test: { src: ["build/test/*_spec.js"]}
+    },
+    jshint: {
+      options: {
+        jshintrc:true
+      },
+      all: [
+        'Gruntfile.js',
+        'src/**/*.js'
+      ],
+      tests: {
+        files: {
+          src: ['test/**/*.js']
+        },
+        options: {
+					"expr": true
+        }
+      }
+    }
+  });
+  
+  grunt.registerTask('test',
+    'Runs unit tests',
+    ['build','simplemocha:test']);
 
-    grunt.loadNpmTasks('grunt-simple-mocha');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-concurrent');
-    grunt.loadNpmTasks('grunt-sass');
-    grunt.loadNpmTasks('grunt-nodemon');
-    grunt.loadNpmTasks('grunt-contrib-compress');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-chmod');
-    grunt.loadNpmTasks('grunt-jsonlint');
+  grunt.registerTask('build',
+    'Compile typescript',
+    ['ts']);
 
-    grunt.registerTask('test-dnr',
-        'Runs unit tests on dnr',
-        ['simplemocha:dnr']);
-
-    grunt.registerTask('dev',
-        'Developer mode: run node-red, watch for source changes and build/restart',
-        ['concurrent:dev']);
 };

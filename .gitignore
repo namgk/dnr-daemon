@@ -17,3 +17,8 @@ node_modules
 public
 locales/zz-ZZ
 nodes/core/locales/zz-ZZ
+build
+test-report
+.tscache
+*baseDir*
+tscommand-*
