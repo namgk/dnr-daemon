@@ -12,33 +12,28 @@ var upstreamAuth = new Auth(Settings.UPSTREAM, Settings.UPSTREAM_USER, Settings.
 var flowsApi: FlowsAPI = new FlowsAPI(auth)
 var upstreamFlowsApi: FlowsAPI = new FlowsAPI(upstreamAuth)
 
-main()
-// auth.probeAuth().then(r=>{
-//   flowsApi.setAuth(auth)
-//   main()
-// }).catch(e=>{
-//   auth.auth().then(r=>{
-//     flowsApi.setAuth(auth)
-//     main()
-//   }).catch(e=>{
-//     throw "cannot authenticate!! " + e;
-//   })
-// })
+var command = process.argv[2]
 
-// upstreamAuth.probeAuth().then(r=>{
-//   upstreamFlowsApi.setAuth(upstreamAuth)
-//   main()
-// }).catch(e=>{
-//   upstreamAuth.auth().then(r=>{
-//     upstreamFlowsApi.setAuth(upstreamAuth)
-//     main()
-//   }).catch(e=>{
-//     throw "cannot authenticate!! " + e;
-//   })
-// })
+if (command === 'getflow'){
+  var flowId = process.argv[3]
+  if (!flowId){
+    console.log('usage: npm start getflow <flowId>')
+    process.exit()
+  }
 
-function main(){
-  upstreamFlowsApi.getFlow('eb379cd6.49ee9').then(r=>{
+  upstreamFlowsApi.getFlow(flowId).then(r=>{
+    console.log(r)
+  }).catch(e=>{
+    console.log(e)
+  })
+} else if (command === 'deploy'){
+  var flowId = process.argv[3]
+  if (!flowId){
+    console.log('usage: npm start deploy <flowId>')
+    process.exit()
+  }
+
+  upstreamFlowsApi.getFlow(flowId).then(r=>{
     return JSON.parse(r)
   }).then(function(flow){
     var renamed : any = {}
@@ -63,4 +58,8 @@ function main(){
   }).catch(e=>{
     console.log(e)
   })
+} else {
+  console.log('usage: npm start <getflow|deploy> <flowId>')
+  process.exit()
 }
+
