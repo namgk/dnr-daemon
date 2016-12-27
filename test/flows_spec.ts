@@ -22,7 +22,7 @@ describe("Test Flows", function () {
         flowsApi = new FlowsAPI(auth)
         done()
       }).catch(e=>{
-        done('error')
+        done('auth not success')
       })
     })
   })

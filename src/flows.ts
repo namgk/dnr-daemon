@@ -32,7 +32,7 @@ export default class FlowsAPI {
         if (res.statusCode == 200){
           f(body)
         } else {
-          r(er + ' - ' + body)
+          r(', error: ' + er + ', body: ' + body)
         }
       })
     })
@@ -47,7 +47,7 @@ export default class FlowsAPI {
         if (res.statusCode == 204){
           f(body)
         } else {
-          r(er + ' - ' + body)
+          r(', error: ' + er + ', body: ' + body)
         }
       })
     })
@@ -63,7 +63,7 @@ export default class FlowsAPI {
         if (res.statusCode == 200){
           f(body)
         } else {
-          r(er + ' - ' + body)
+          r(', error: ' + er + ', body: ' + body)
         }
       })
     })
