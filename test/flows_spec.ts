@@ -1,6 +1,6 @@
 import Auth from '../src/auth';
 import FlowsAPI from '../src/flows';
-import Settings from '../src/settings';
+import Settings from './settings';
 
 import fs = require('fs');
 
@@ -29,8 +29,11 @@ describe("Test Flows", function () {
 
   it('install, delete flow', function(done){
     var test_flow = testDataObj.inject_debug
-    flowsApi.installFlow(JSON.stringify(test_flow)).then(r=>{
-      flowsApi.uninstallFlow(JSON.parse(r).id).then(r=>{
+    flowsApi.installFlow(JSON.stringify(test_flow))
+    .then(r=>{
+      let flow = JSON.parse(r)
+      expect(flow.id).to.not.undefined
+      flowsApi.uninstallFlow(flow.id).then(r=>{
         done()
       }).catch(e=>{
         done('error deleting flow ' + e)
@@ -44,15 +47,19 @@ describe("Test Flows", function () {
     var test_flow = testDataObj.inject_func_debug
 
     flowsApi.installFlow(JSON.stringify(test_flow))
-    .then(r=>{
-      return JSON.parse(r).id
+    .then(f=>{
+      let flow = JSON.parse(f)
+      expect(flow.id).to.not.undefined
+      return flow.id
     })
     .then(fid=>{
-      return flowsApi.getFlow(fid)
+      return flowsApi.getFlow(fid) // this is a promise
     })
-    .then(flow=>{
-      var flowId = JSON.parse(flow).id
-      return flowsApi.uninstallFlow(flowId)
+    .then(f=>{
+      let flow = JSON.parse(f)
+      expect(flow.id).to.not.undefined
+      expect(flow.nodes).to.not.undefined
+      return flowsApi.uninstallFlow(flow.id)
     })
     .then(deleteResult=>{
       done()

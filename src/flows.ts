@@ -14,10 +14,12 @@ export default class FlowsAPI {
       baseUrl: auth.getHost(),
       uri: '',
       headers: {
-        'Authorization' : 'Bearer ' + auth.getToken(),
         'Content-type' : 'application/json'
       }
-    };
+    }
+    if (auth.getToken() && auth.getToken() !== 'noauth'){
+      this.authOpt.headers['Authorization'] = 'Bearer ' + auth.getToken()
+    }
   }
 
   public setAuth(auth: Auth){

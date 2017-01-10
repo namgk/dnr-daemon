@@ -16,7 +16,7 @@ export default class Auth {
     this.nodeRedHost = host;
     this.username = username;
     this.password = password;
-    this.hostString = host.split('//')[1].replace(':','_')
+    this.hostString = host.split('//')[1].replace(':','_').replace('/','')
 
     let obj = this
     try {
@@ -32,26 +32,49 @@ export default class Auth {
     return this.nodeRedHost
   }
 
-  public probeAuth(): Promise<boolean> {
+  public probeAuth(): Promise<string> {
     let obj = this
-    return new Promise<boolean>(function(f,r){
-      if (!obj.token){
-        return r(true)
-      }
 
-      const opt: request.OptionsWithUri = {
+    return new Promise<string>(function(f,r){
+      const optNoAuth: request.OptionsWithUri = {
         baseUrl: obj.nodeRedHost,
-        uri: Auth.A_PRIVATE_RESOURCE,
-        headers: {'Authorization' : 'Bearer ' + obj.token}
+        uri: Auth.A_PRIVATE_RESOURCE
       };
 
-      request.get(opt, (er, res, body) => {
-        if (res.statusCode == 200){
-          f(true)
-        } else {
-          r(true)
+      request.get(optNoAuth, (er, res, body) => {
+        if (er){
+          return r(er)
         }
+
+        if (res.statusCode == 200){
+          obj.token = 'noauth'
+          return f(body)
+        }
+
+        if (!obj.token){
+          return r(body)
+        }
+
+        const opt: request.OptionsWithUri = {
+          baseUrl: obj.nodeRedHost,
+          uri: Auth.A_PRIVATE_RESOURCE,
+          headers: {'Authorization' : 'Bearer ' + obj.token}
+        };
+
+        request.get(opt, (er2, res2, body) => {
+          if (er2){
+            return r(er2)
+          }
+          
+          if (res2.statusCode == 200){
+            f(body)
+          } else {
+            r(body)
+          }
+        })
+        
       })
+
     })
   }
 
@@ -66,13 +89,18 @@ export default class Auth {
       };
 
       request.post(opt, (er, res, body) => {
-        if (!er && body != 'Unauthorized'){
-          obj.token = JSON.parse(body).access_token
-          fs.writeFileSync(Auth.DNR_HOME + '/token_' + obj.hostString, obj.token);
-          f(obj.token)
-        } else {
-          r(er)
+        if (er || body === 'Unauthorized'){
+          return r(er + ' ' + body)
         }
+
+        obj.token = JSON.parse(body).access_token
+
+        if (!obj.token){
+          return r(body)
+        }
+
+        fs.writeFileSync(Auth.DNR_HOME + '/token_' + obj.hostString, obj.token);
+        f(obj.token)
       })
     })
   }
