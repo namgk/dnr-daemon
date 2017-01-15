@@ -1,0 +1,17 @@
+{
+  "auth_targets": [
+    {
+      "TARGET": "http://localhost:1880",
+      "USER": "admin",
+      "PASS": ""
+    },
+    {
+      "TARGET": "http://localhost:1818",
+      "USER": "admin",
+      "PASS": ""
+    }
+  ],
+  "noauth_targets": [
+
+  ]
+}

@@ -1,35 +1,44 @@
 import Auth from '../src/auth';
 import fs = require('fs');
 import Settings from './settings';
+import request = require('request');
 
 import {expect} from 'chai';
 
 describe("Test Auth", function () {
-  var targets : any[] = [
-    {
-      TARGET: 'http://localhost:1443',
-      USER: 'admin',
-      PASS: process.env.NRPWD
-    },
-    {
-      TARGET: 'http://localhost:2443',
-      USER: 'admin',
-      PASS: process.env.NRPWD
-    }
-  ]
-
-  var targetNoAuth : string = 'http://localhost:1880'
+  var testData = fs.readFileSync(__dirname + '/../../test/test_configs.json', 'utf8')
+  var testDataObj = JSON.parse(testData)
+  var targets = testDataObj.auth_targets
+  var targetNoAuth = testDataObj.noauth_targets
 
   // TODO: clear .dnr-daemon before all tests
-  before(function () {
+  before(function (done) {
     if (!fs.existsSync(process.env.HOME+ '/.dnr-daemon')){
       fs.mkdirSync(process.env.HOME+ '/.dnr-daemon');
+    }
+
+    for (let target of targets){
+      const optNoAuth: request.OptionsWithUri = {
+        baseUrl: target.TARGET,
+        uri: '/'
+      };
+
+      request.get(optNoAuth, (er, res, body) => {
+        done(er)
+      })
+    }
+  })
+
+  beforeEach(function() {
+    var tokens = fs.readdirSync(process.env.HOME+ '/.dnr-daemon')
+    for (let token of tokens){
+      fs.unlinkSync(process.env.HOME+ '/.dnr-daemon/' + token)
     }
   })
 
   for (let target of targets){
     it("authenticates", function (done) {
-      let auth = new Auth(target.TARGET, target.USER, target.PASS);
+      let auth = new Auth(target.TARGET, target.USER, process.env.NRPWD);
       auth.probeAuth().then(r=>{
         expect(auth.getToken()).to.not.undefined
         expect(auth.getToken()).to.not.equal('noauth')
@@ -48,7 +57,7 @@ describe("Test Auth", function () {
   }
 
   for (let target of targets){
-    it("not authenticates - empty username/password", function (done) {
+    it("not authenticates with empty username/password", function (done) {
       let auth = new Auth(target.TARGET, '', '');
       auth.probeAuth().then(r=>{
         done('should not be here')
@@ -57,7 +66,7 @@ describe("Test Auth", function () {
           done('should not be here')
         }).catch(e=>{
           console.log('error: ' + e)
-          done()
+          done(1)
         })
       })
     });
@@ -73,20 +82,23 @@ describe("Test Auth", function () {
           done('should not be here')
         }).catch(e=>{
           console.log('error: ' + e)
-          done()
+          done(1)
         })
       })
     });
   }
 
-  it("works with no auth", function (done) {
-    let auth = new Auth(targetNoAuth, '', '');
-    auth.probeAuth().then(r=>{
-      expect(auth.getToken()).to.equal('noauth')
-      done()
-    }).catch(function(e){
-      console.log('error: ' + e)
-      done('error')
-    })
-  });
+  for (let target of targetNoAuth){
+    it("works with no auth", function (done) {
+      let auth = new Auth(target, '', '');
+      auth.probeAuth().then(r=>{
+        expect(auth.getToken()).to.equal('noauth')
+        done()
+      }).catch(function(e){
+        console.log('error: ' + e)
+        done(1)
+      })
+    });
+  }
+
 })

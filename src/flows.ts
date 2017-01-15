@@ -26,15 +26,29 @@ export default class FlowsAPI {
     this.auth = auth
   }
 
+  public getAllFlow(): Promise<string> {
+    let obj = this
+    return new Promise<string>(function(f,r){
+      obj.authOpt.uri = FlowsAPI.FLOW_RESOURCE + 's'
+      request.get(obj.authOpt, (er, res, body) => {
+        if (res && res.statusCode == 200){
+          f(body)
+        } else {
+          r('error: ' + er + ', body: ' + body)
+        }
+      })
+    })
+  }
+
   public getFlow(id: string): Promise<string> {
     let obj = this
     return new Promise<string>(function(f,r){
       obj.authOpt.uri = FlowsAPI.FLOW_RESOURCE + '/' + id
       request.get(obj.authOpt, (er, res, body) => {
-        if (res.statusCode == 200){
+        if (res && res.statusCode == 200){
           f(body)
         } else {
-          r(', error: ' + er + ', body: ' + body)
+          r('error: ' + er + ', body: ' + body)
         }
       })
     })
@@ -46,10 +60,10 @@ export default class FlowsAPI {
     return new Promise<string>(function(f,r){
       obj.authOpt.uri = FlowsAPI.FLOW_RESOURCE + '/' + id
       request.del(obj.authOpt, (er, res, body) => {
-        if (res.statusCode == 204){
+        if (res && res.statusCode == 204){
           f(body)
         } else {
-          r(', error: ' + er + ', body: ' + body)
+          r('error: ' + er + ', body: ' + body)
         }
       })
     })
@@ -62,10 +76,10 @@ export default class FlowsAPI {
       obj.authOpt.body = flow
       request.post(obj.authOpt, (er, res, body) => {
         delete obj.authOpt.body
-        if (res.statusCode == 200){
+        if (res && res.statusCode == 200){
           f(body)
         } else {
-          r(', error: ' + er + ', body: ' + body)
+          r('error: ' + er + ', body: ' + body)
         }
       })
     })

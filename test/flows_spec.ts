@@ -1,9 +1,6 @@
 import Auth from '../src/auth';
 import FlowsAPI from '../src/flows';
-import Settings from './settings';
-
 import fs = require('fs');
-
 import {expect} from 'chai';
 
 describe("Test Flows", function () {
@@ -11,9 +8,13 @@ describe("Test Flows", function () {
   let flowsApi: FlowsAPI = null
   var testData = fs.readFileSync(__dirname + '/../../test/test_data.json', 'utf8')
   var testDataObj = JSON.parse(testData)
-
+  var testConfig = fs.readFileSync(__dirname + '/../../test/test_configs.json', 'utf8')
+  var testConfigObj = JSON.parse(testConfig)
+  
   before(function (done) {
-    let auth = new Auth(Settings.TARGET, Settings.USER, Settings.PASS);
+    let target = testConfigObj.auth_targets[0].TARGET
+    let user = testConfigObj.auth_targets[0].USER
+    let auth = new Auth(target, user, process.env.NRPWD);
     auth.probeAuth().then(r=>{
       flowsApi = new FlowsAPI(auth)
       done()
@@ -22,7 +23,7 @@ describe("Test Flows", function () {
         flowsApi = new FlowsAPI(auth)
         done()
       }).catch(e=>{
-        done('auth not success')
+        done('Auth not success ' + e)
       })
     })
   })
