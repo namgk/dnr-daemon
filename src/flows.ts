@@ -34,7 +34,7 @@ export default class FlowsAPI {
         if (res && res.statusCode == 200){
           f(body)
         } else {
-          r('error: ' + er + ', body: ' + body)
+          r({error: er, body: body, statusCode: res.statusCode, statusMessage: res.statusMessage})
         }
       })
     })
@@ -48,7 +48,7 @@ export default class FlowsAPI {
         if (res && res.statusCode == 200){
           f(body)
         } else {
-          r('error: ' + er + ', body: ' + body)
+          r({error: er, body: body, statusCode: res.statusCode, statusMessage: res.statusMessage})
         }
       })
     })
@@ -63,7 +63,7 @@ export default class FlowsAPI {
         if (res && res.statusCode == 204){
           f(body)
         } else {
-          r('error: ' + er + ', body: ' + body)
+          r({error: er, body: body, statusCode: res.statusCode, statusMessage: res.statusMessage})
         }
       })
     })
@@ -79,7 +79,7 @@ export default class FlowsAPI {
         if (res && res.statusCode == 200){
           f(body)
         } else {
-          r('error: ' + er + ', body: ' + body)
+          r({error: er, body: body, statusCode: res.statusCode, statusMessage: res.statusMessage})
         }
       })
     })

@@ -26,11 +26,11 @@
   "dependencies": {
     "@types/core-js": "^0.9.34",
     "@types/request": "0.0.33",
+    "@types/request-promise-native": "^1.0.2",
     "clone": "^1.0.2",
     "follow-redirects": "^1.1.0",
-    "kb-logger": "^1.1.1",
-    "q": "^1.4.1",
-    "request": "^2.78.0"
+    "request": "^2.78.0",
+    "request-promise-native": "^1.0.3"
   },
   "devDependencies": {
     "@types/chai": "^3.4.34",

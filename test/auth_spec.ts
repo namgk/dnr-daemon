@@ -1,8 +1,7 @@
 import Auth from '../src/auth';
 import fs = require('fs');
 import Settings from './settings';
-import request = require('request');
-
+import request = require('request-promise-native');
 import {expect} from 'chai';
 
 describe("Test Auth", function () {
@@ -11,11 +10,12 @@ describe("Test Auth", function () {
   var targets = testDataObj.auth_targets
   var targetNoAuth = testDataObj.noauth_targets
 
-  // TODO: clear .dnr-daemon before all tests
   before(function (done) {
     if (!fs.existsSync(process.env.HOME+ '/.dnr-daemon')){
       fs.mkdirSync(process.env.HOME+ '/.dnr-daemon');
     }
+
+    let requestProms = []
 
     for (let target of targets){
       const optNoAuth: request.OptionsWithUri = {
@@ -23,10 +23,14 @@ describe("Test Auth", function () {
         uri: '/'
       };
 
-      request.get(optNoAuth, (er, res, body) => {
-        done(er)
-      })
+      requestProms.push(request(optNoAuth))
     }
+
+    Promise.all(requestProms).then(function () {
+      done()
+    }).catch(function(e){
+      done(1)
+    })
   })
 
   beforeEach(function() {
@@ -65,8 +69,7 @@ describe("Test Auth", function () {
         auth.auth().then(r=>{
           done('should not be here')
         }).catch(e=>{
-          console.log('error: ' + e)
-          done(1)
+          done()
         })
       })
     });
@@ -81,8 +84,7 @@ describe("Test Auth", function () {
         auth.auth().then(r=>{
           done('should not be here')
         }).catch(e=>{
-          console.log('error: ' + e)
-          done(1)
+          done()
         })
       })
     });
@@ -95,8 +97,7 @@ describe("Test Auth", function () {
         expect(auth.getToken()).to.equal('noauth')
         done()
       }).catch(function(e){
-        console.log('error: ' + e)
-        done(1)
+        done('should not be here')
       })
     });
   }
