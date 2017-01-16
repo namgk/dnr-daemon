@@ -1,5 +1,6 @@
 import request = require('request');
 import assert = require('assert');
+import clone = require('clone');
 import fs = require('fs');
 import Auth from './auth'
 
@@ -28,9 +29,10 @@ export default class FlowsAPI {
 
   public getAllFlow(): Promise<string> {
     let obj = this
+    let opt = clone(obj.authOpt)
     return new Promise<string>(function(f,r){
-      obj.authOpt.uri = FlowsAPI.FLOW_RESOURCE + 's'
-      request.get(obj.authOpt, (er, res, body) => {
+      opt.uri = FlowsAPI.FLOW_RESOURCE + 's'
+      request.get(opt, (er, res, body) => {
         if (res && res.statusCode == 200){
           f(body)
         } else {
@@ -42,9 +44,10 @@ export default class FlowsAPI {
 
   public getFlow(id: string): Promise<string> {
     let obj = this
+    let opt = clone(obj.authOpt)
     return new Promise<string>(function(f,r){
-      obj.authOpt.uri = FlowsAPI.FLOW_RESOURCE + '/' + id
-      request.get(obj.authOpt, (er, res, body) => {
+      opt.uri = FlowsAPI.FLOW_RESOURCE + '/' + id
+      request.get(opt, (er, res, body) => {
         if (res && res.statusCode == 200){
           f(body)
         } else {
@@ -57,9 +60,10 @@ export default class FlowsAPI {
 
   public uninstallFlow(id: string): Promise<string> {
     let obj = this
+    let opt = clone(obj.authOpt)
     return new Promise<string>(function(f,r){
-      obj.authOpt.uri = FlowsAPI.FLOW_RESOURCE + '/' + id
-      request.del(obj.authOpt, (er, res, body) => {
+      opt.uri = FlowsAPI.FLOW_RESOURCE + '/' + id
+      request.del(opt, (er, res, body) => {
         if (res && res.statusCode == 204){
           f(body)
         } else {
@@ -71,11 +75,11 @@ export default class FlowsAPI {
 
   public installFlow(flow: string): Promise<string> {
     let obj = this
+    let opt = clone(obj.authOpt)
     return new Promise<string>(function(f,r){
-      obj.authOpt.uri = FlowsAPI.FLOW_RESOURCE
-      obj.authOpt.body = flow
-      request.post(obj.authOpt, (er, res, body) => {
-        delete obj.authOpt.body
+      opt.uri = FlowsAPI.FLOW_RESOURCE
+      opt.body = flow
+      request.post(opt, (er, res, body) => {
         if (res && res.statusCode == 200){
           f(body)
         } else {

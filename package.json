@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/namgk/dnr-daemon#readme",
   "dependencies": {
+    "@types/clone": "^0.1.30",
     "@types/core-js": "^0.9.34",
     "@types/request": "0.0.33",
     "@types/request-promise-native": "^1.0.2",

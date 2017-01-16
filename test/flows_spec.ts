@@ -22,9 +22,7 @@ describe("Test Flows", function () {
       auth.auth().then(r=>{
         flowsApi = new FlowsAPI(auth)
         done()
-      }).catch(e=>{
-        done('Auth not success ' + e)
-      })
+      }).catch(done)
     })
   })
 
@@ -36,12 +34,47 @@ describe("Test Flows", function () {
       expect(flow.id).to.not.undefined
       flowsApi.uninstallFlow(flow.id).then(r=>{
         done()
-      }).catch(e=>{
-        done('error deleting flow ' + e)
-      })
-    }).catch(e=>{
-      done('error installing flow '+ e)
+      }).catch(done)
+    }).catch(done)
+  })
+
+  it.only('multiple installs', function(done){
+    var INSTALLS : any[] = [] 
+
+    var test_flow = testDataObj.inject_debug
+    var inject_only = testDataObj.inject_only
+
+    // uncomment these to enable the test
+    INSTALLS.push(test_flow)
+    INSTALLS.push(inject_only)
+
+    let installRequests = []
+    for (let i = 0; i < INSTALLS.length; i++){
+      installRequests.push(
+        flowsApi.installFlow(JSON.stringify(test_flow))
+        .then(r=>{
+          let flow = JSON.parse(r)
+          return flow.id
+        })
+      )
+    }
+
+    Promise.all(installRequests)
+    .then(rs=>{
+      expect(rs.length).to.equal(INSTALLS.length)
+      
+      let getRequests = []
+      for (let r of rs){
+        getRequests.push(flowsApi.getFlow(r))
+      }
+
+      return Promise.all(getRequests)
     })
+    .then(rss=>{
+      expect(rss.length).to.equal(INSTALLS.length)
+      done()
+    })
+    .catch(done)
   })
 
   it("install, get and delete flow", function (done) {
@@ -62,11 +95,7 @@ describe("Test Flows", function () {
       expect(flow.nodes).to.not.undefined
       return flowsApi.uninstallFlow(flow.id)
     })
-    .then(deleteResult=>{
-      done()
-    })
-    .catch(e=>{
-      done('error in flow API '+ e)
-    })
+    .then(done)
+    .catch(done)
   });
 })
