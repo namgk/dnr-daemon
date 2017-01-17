@@ -32,15 +32,24 @@ export default class Dnr {
 
     for (let node of nodesList){
       let nodeId = node.id
+      let nodeConstraints = node.constraints
+      if (nodeConstraints){
+        var linkConstraints = nodeConstraints.link
+      }
 
       for (let output in node.wires){
         let wires = node.wires[output]
         for (let i = 0; i < wires.length; i++){
+          let linkType
+          if (linkConstraints){
+            linkType = linkConstraints[output+'_'+wires[i]] || linkType
+          }
           let dnrNode = {
             id: Utils.generateId(),
             type: 'dnr',
             z: node.z,
             wires:[[wires[i]]],
+            linkType: linkType,
             input: nodeId + '_' + output,
             gateway: dnrGateway.id,
             x: Math.round( (node.x + nodesMap.get(wires[i]).x) / 2 ),
