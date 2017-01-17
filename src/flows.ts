@@ -1,4 +1,4 @@
-import request = require('request');
+import request = require('request-promise-native');
 import assert = require('assert');
 import clone = require('clone');
 import fs = require('fs');
@@ -30,14 +30,14 @@ export default class FlowsAPI {
   public getAllFlow(): Promise<string> {
     let obj = this
     let opt = clone(obj.authOpt)
+    opt.uri = FlowsAPI.FLOW_RESOURCE + 's'
     return new Promise<string>(function(f,r){
-      opt.uri = FlowsAPI.FLOW_RESOURCE + 's'
-      request.get(opt, (er, res, body) => {
-        if (res && res.statusCode == 200){
-          f(body)
-        } else {
-          r({error: er, body: body, statusCode: res.statusCode, statusMessage: res.statusMessage})
-        }
+      request(opt)
+      .then((body) => {
+        f(body)
+      })
+      .catch(function (er) {
+        r({error: er.error, statusCode: er.statusCode, statusMessage: er.message})
       })
     })
   }
@@ -45,14 +45,14 @@ export default class FlowsAPI {
   public getFlow(id: string): Promise<string> {
     let obj = this
     let opt = clone(obj.authOpt)
+    opt.uri = FlowsAPI.FLOW_RESOURCE + '/' + id
     return new Promise<string>(function(f,r){
-      opt.uri = FlowsAPI.FLOW_RESOURCE + '/' + id
-      request.get(opt, (er, res, body) => {
-        if (res && res.statusCode == 200){
-          f(body)
-        } else {
-          r({error: er, body: body, statusCode: res.statusCode, statusMessage: res.statusMessage})
-        }
+      request(opt)
+      .then((body) => {
+        f(body)
+      })
+      .catch(function (er) {
+        r({error: er.error, statusCode: er.statusCode, statusMessage: er.message})
       })
     })
   }
@@ -61,14 +61,15 @@ export default class FlowsAPI {
   public uninstallFlow(id: string): Promise<string> {
     let obj = this
     let opt = clone(obj.authOpt)
+    opt.uri = FlowsAPI.FLOW_RESOURCE + '/' + id
+    opt.method = 'DELETE'
     return new Promise<string>(function(f,r){
-      opt.uri = FlowsAPI.FLOW_RESOURCE + '/' + id
-      request.del(opt, (er, res, body) => {
-        if (res && res.statusCode == 204){
-          f(body)
-        } else {
-          r({error: er, body: body, statusCode: res.statusCode, statusMessage: res.statusMessage})
-        }
+      request(opt)
+      .then((body) => {
+        f(body)
+      })
+      .catch(function (er) {
+        r({error: er.error, statusCode: er.statusCode, statusMessage: er.message})
       })
     })
   }
@@ -76,15 +77,16 @@ export default class FlowsAPI {
   public installFlow(flow: string): Promise<string> {
     let obj = this
     let opt = clone(obj.authOpt)
+    opt.uri = FlowsAPI.FLOW_RESOURCE
+    opt.body = flow
+    opt.method = 'POST'
     return new Promise<string>(function(f,r){
-      opt.uri = FlowsAPI.FLOW_RESOURCE
-      opt.body = flow
-      request.post(opt, (er, res, body) => {
-        if (res && res.statusCode == 200){
-          f(body)
-        } else {
-          r({error: er, body: body, statusCode: res.statusCode, statusMessage: res.statusMessage})
-        }
+      request(opt)
+      .then((body) => {
+        f(body)
+      })
+      .catch(function (er) {
+        r({error: er.error, statusCode: er.statusCode, statusMessage: er.message})
       })
     })
   }

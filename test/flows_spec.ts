@@ -38,15 +38,15 @@ describe("Test Flows", function () {
     }).catch(done)
   })
 
-  it.only('multiple installs', function(done){
+  it('multiple installs', function(done){
     var INSTALLS : any[] = [] 
 
     var test_flow = testDataObj.inject_debug
     var inject_only = testDataObj.inject_only
 
     // uncomment these to enable the test
-    INSTALLS.push(test_flow)
-    INSTALLS.push(inject_only)
+    // INSTALLS.push(test_flow)
+    // INSTALLS.push(inject_only)
 
     let installRequests = []
     for (let i = 0; i < INSTALLS.length; i++){
