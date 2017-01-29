@@ -74,9 +74,9 @@
 21 silly publish      typing: '^0.1.9' },
 21 silly publish   readme: '# dnr-daemon: Distributed Node-RED (DNR) enabler for Node-RED\nTo be run with vanilla Node-RED on the same machine to add DNR functionalities.\n\nDNR Daemon subscribes to an MQTT topic to be notified whenever new DNR flows are available from master flow editor. It parses the new flows based on flows constraints and redeployed the DNR-parsed flows onto vanilla Node-RED.\n\n# Run instruction\nInstall and run Node-RED: <http://nodered.org/>\n\nModify settings.js to correspond with the Node-RED installation.\n\n$ npm install -g dnr-daemon\n\n$ dnr-daemon\n\nYou might need:\n\n$ sudo npm install -g node-red-contrib-dnr\n\nto install the special DNRNode used in DNR. Node-RED restart is required for new nodes to be registered.\n',
 21 silly publish   readmeFilename: 'README.md',
-21 silly publish   gitHead: '4523b2076a7093393432b82b4a6ba2fb302a4148',
+21 silly publish   gitHead: '48ca2f268801ade35767a65fd0bf9135e4de71b0',
 21 silly publish   _id: 'dnr-daemon@2.0.4',
-21 silly publish   _shasum: '8de757e5a791673720985bad2fbdcff113724cb1',
+21 silly publish   _shasum: 'd62d302dedc072b4178c1d858256bab5320e5fe3',
 21 silly publish   _from: '.' }
 22 verbose getPublishConfig undefined
 23 silly mapToRegistry name dnr-daemon
@@ -95,22 +95,22 @@
 29 silly publish uploading /home/namnhong/.npm/dnr-daemon/2.0.4/package.tgz
 30 verbose request uri https://registry.npmjs.org/dnr-daemon
 31 verbose request sending authorization for write operation
-32 info attempt registry request try #1 at 7:54:20 PM
+32 info attempt registry request try #1 at 8:32:55 PM
 33 verbose request using bearer token for auth
-34 verbose request id b662d34e0613d0b8
+34 verbose request id 0c51b07b5618e636
 35 http request PUT https://registry.npmjs.org/dnr-daemon
 36 http 403 https://registry.npmjs.org/dnr-daemon
 37 verbose headers { 'content-type': 'application/json',
 37 verbose headers   'cache-control': 'max-age=300',
 37 verbose headers   'content-length': '95',
 37 verbose headers   'accept-ranges': 'bytes',
-37 verbose headers   date: 'Sun, 29 Jan 2017 03:54:20 GMT',
+37 verbose headers   date: 'Sun, 29 Jan 2017 04:32:55 GMT',
 37 verbose headers   via: '1.1 varnish',
 37 verbose headers   connection: 'keep-alive',
-37 verbose headers   'x-served-by': 'cache-sea1921-SEA',
+37 verbose headers   'x-served-by': 'cache-sea1926-SEA',
 37 verbose headers   'x-cache': 'MISS',
 37 verbose headers   'x-cache-hits': '0',
-37 verbose headers   'x-timer': 'S1485662060.359476,VS0,VE184',
+37 verbose headers   'x-timer': 'S1485664375.165243,VS0,VE92',
 37 verbose headers   vary: 'Accept-Encoding' }
 38 verbose request invalidating /home/namnhong/.npm/registry.npmjs.org/dnr-daemon on PUT
 39 error publish Failed PUT 403

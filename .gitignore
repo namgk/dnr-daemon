@@ -21,3 +21,4 @@ test-report
 .tscache
 *baseDir*
 tscommand-*
+npm-debug.log
