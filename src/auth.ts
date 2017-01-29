@@ -19,7 +19,11 @@ export default class Auth {
     this.hostString = host.split('//')[1].replace(':','_').replace('/','')
 
     let obj = this
+
     try {
+      if (!fs.existsSync(Auth.DNR_HOME)){
+        fs.mkdirSync(Auth.DNR_HOME);
+      }
       obj.token = fs.readFileSync(Auth.DNR_HOME + '/token_' + this.hostString, 'utf8');
     } catch (e){}
   }
@@ -99,7 +103,10 @@ export default class Auth {
           return r(body)
         }
 
-        fs.writeFileSync(Auth.DNR_HOME + '/token_' + obj.hostString, obj.token);
+        try {
+          fs.writeFileSync(Auth.DNR_HOME + '/token_' + obj.hostString, obj.token);
+        } catch (e){}
+
         f(obj.token)
       })
     })
