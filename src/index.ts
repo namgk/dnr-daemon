@@ -2,127 +2,108 @@ import Auth from './auth';
 import FlowsAPI from './flows';
 import Dnr from './dnr'
 import Utils from './utils'
-import Settings from './settings';
+import fs = require('fs')
 
-var upstreamAuth = new Auth(Settings.UPSTREAM, Settings.UPSTREAM_USER, Settings.UPSTREAM_PASS);
-var auth = new Auth(Settings.TARGET, Settings.USER, Settings.PASS);
+const DNR_HOME: string = process.env.HOME+ '/.dnr-daemon'
+const CMD_GET_FLOW: string = 'getflow'
+const CMD_GET_FLOWS: string = 'getflows'
+const CMD_DELETE_FLOW: string = 'deleteflow'
+const CMD_INSTALL_FLOW: string = 'installflow'
+const CMD_TARGET: string = 'target'
 
-var upstreamAuthed = false
-upstreamAuth.auth().then(()=>{
-  upstreamAuthed = true
-  main()
-})
+var command: string = process.argv[2]
+if (command !== CMD_GET_FLOW && 
+    command !== CMD_GET_FLOWS && 
+    command !== CMD_INSTALL_FLOW && 
+    command !== CMD_DELETE_FLOW &&
+    command !== CMD_TARGET){
+
+  console.log('usage: npm start <' + CMD_GET_FLOW + '|' 
+                                   + CMD_GET_FLOWS + '|'
+                                   + CMD_INSTALL_FLOW + '|'
+                                   + CMD_DELETE_FLOW + '|'
+                                   + CMD_TARGET + '>')
+  process.exit()
+}
+
+if (command === CMD_TARGET){
+  if (process.argv.length !== 4 && process.argv.length !== 6){
+    console.log('usage: >npm start ' + CMD_TARGET + ' <target> [user] [pass]')
+    process.exit()
+  }
+
+  let target: any  = {
+    host: process.argv[3]
+  }
+
+  if (process.argv.length === 6){
+    target.user = process.argv[4]
+    target.pass = process.argv[5]
+  }
+
+  var auth = new Auth(target.host, target.user, target.pass)
+  auth.auth().then(()=>{
+    fs.writeFileSync(DNR_HOME + '/target', process.argv[3])
+    console.log('target set - ' + process.argv[3])
+    process.exit()
+  }).catch(console.log)
+} else {
+  try {
+    var target: any = fs.readFileSync(DNR_HOME + '/target', 'utf8');
+    if (!target){
+      throw 'no target found'
+    }
+  } catch(e){
+    console.log('no target found, please run >npm start ' + CMD_TARGET + ' <target> [user] [pass]')
+    process.exit()
+  }
+
+  var auth = new Auth(target,"","");
+
+  auth.probeAuth().then(()=>{
+    main()
+  }).catch(console.log)
+}
 
 function main(){
-  var upstreamFlowsApi: FlowsAPI = new FlowsAPI(upstreamAuth)
   var flowsApi: FlowsAPI = new FlowsAPI(auth)
 
-  // demo
-  var auth1 = new Auth(Settings.TARGET1, Settings.USER, Settings.PASS);
-  var auth2 = new Auth(Settings.TARGET2, Settings.USER, Settings.PASS);
-  var auth3 = new Auth(Settings.TARGET3, Settings.USER, Settings.PASS);
-  var auth4 = new Auth(Settings.TARGET4, Settings.USER, Settings.PASS);
-  var auth5 = new Auth(Settings.TARGET5, Settings.USER, Settings.PASS);
-  var flowsApi1: FlowsAPI = new FlowsAPI(auth1)
-  var flowsApi2: FlowsAPI = new FlowsAPI(auth2)
-  var flowsApi3: FlowsAPI = new FlowsAPI(auth3)
-  var flowsApi4: FlowsAPI = new FlowsAPI(auth4)
-  var flowsApi5: FlowsAPI = new FlowsAPI(auth5)
-
-  var command = process.argv[2]
-  if (command === 'getallflow'){
-    upstreamFlowsApi.getAllFlow().then(r=>{
+  if (command === CMD_GET_FLOWS){
+    flowsApi.getAllFlow().then(r=>{
       console.log(r)
     }).catch(e=>{
       console.log(e)
     })
-  } else if (command === 'getflow'){
+  } 
+
+  if (command === CMD_GET_FLOW){
     var flowId = process.argv[3]
     if (!flowId){
-      console.log('usage: npm start getflow <flowId>')
+      console.log('usage: npm start ' + CMD_GET_FLOW + ' <flow_id>')
       process.exit()
     }
 
-    upstreamFlowsApi.getFlow(flowId).then(r=>{
-      console.log(r)
-    }).catch(e=>{
-      console.log(e)
-    })
-  } else if (command === 'deploy'){
+    flowsApi.getFlow(flowId).then(console.log).catch(console.log)
+  }
+
+  if (command === CMD_DELETE_FLOW){
     var flowId = process.argv[3]
     if (!flowId){
-      console.log('usage: npm start deploy <flowId>')
+      console.log('usage: npm start ' + CMD_DELETE_FLOW + ' <flow_id>')
       process.exit()
     }
 
-    upstreamFlowsApi.getFlow(flowId).then(r=>{
-      return JSON.parse(r)
-    }).then(function(flow){
-      var renamed : any = {}
-      for (let node of flow.nodes){
-        renamed[node.id] = Utils.generateId()
-        node.id = renamed[node.id]
-      }
-      for (let node of flow.nodes){
-        for (let i = 0; i < node.wires.length; i++){
-          let wires = node.wires[i]
-          for (let j = 0; j < wires.length; j++){
-            let w = wires[j]
-            wires[j] = renamed[w]
-          }
-          node.wires[i] = wires
-        }
-      }
-      var dnrizedFlow = Dnr.dnrize(flow)
-      return flowsApi5.installFlow(JSON.stringify(dnrizedFlow))
-    }).then(rr=>{
-      console.log(rr)
-    }).catch(e=>{
-      console.log(e)
-    })
-  } else if (command === 'deployAll'){
-    var flowId = process.argv[3]
-    if (!flowId){
-      console.log('usage: npm start deployAll <flowId>')
+    flowsApi.uninstallFlow(flowId).then(console.log).catch(console.log)
+  }
+
+  if (command === CMD_INSTALL_FLOW){
+    var flowJson = process.argv[3]
+    if (!flowJson){
+      console.log('usage: npm start ' + CMD_INSTALL_FLOW + ' <flow_json>')
       process.exit()
     }
 
-    upstreamFlowsApi.getFlow(flowId).then(r=>{
-      return JSON.parse(r)
-    }).then(function(flow){
-      var renamed : any = {}
-      for (let node of flow.nodes){
-        renamed[node.id] = Utils.generateId()
-        node.id = renamed[node.id]
-      }
-      for (let node of flow.nodes){
-        for (let i = 0; i < node.wires.length; i++){
-          let wires = node.wires[i]
-          for (let j = 0; j < wires.length; j++){
-            let w = wires[j]
-            wires[j] = renamed[w]
-          }
-          node.wires[i] = wires
-        }
-      }
-      return Dnr.dnrize(flow)
-    }).then(dnrizedFlow=>{
-      flowsApi1.installFlow(JSON.stringify(dnrizedFlow))
-      return dnrizedFlow
-    }).then(dnrizedFlow=>{
-      flowsApi2.installFlow(JSON.stringify(dnrizedFlow))
-      return dnrizedFlow
-    }).then(dnrizedFlow=>{
-      flowsApi3.installFlow(JSON.stringify(dnrizedFlow))
-      return dnrizedFlow
-    }).then(dnrizedFlow=>{
-      return flowsApi4.installFlow(JSON.stringify(dnrizedFlow))
-    }).catch(e=>{
-      console.log(e)
-    })
-  } else {
-    console.log('usage: npm start <getflow|deploy|deployAll> <flowId>')
-    process.exit()
+    flowsApi.installFlow(flowJson).then(console.log).catch(console.log)
   }
 
 }
