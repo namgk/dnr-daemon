@@ -14,9 +14,7 @@ var Auth = (function () {
             }
             obj.token = fs.readFileSync(Auth.DNR_HOME + '/token_' + this.hostString, 'utf8');
         }
-        catch (e) {
-            console.log(e);
-        }
+        catch (e) { }
     }
     Auth.prototype.getToken = function () {
         return this.token;

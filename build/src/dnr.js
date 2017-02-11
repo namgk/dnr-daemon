@@ -59,6 +59,7 @@ var Dnr = (function () {
         if (addingDnrNodes.length > 0) {
             dnrized.nodes.push(dnrGateway);
         }
+        dnrized.label = 'dnr_' + dnrized.id;
         return dnrized;
     };
     return Dnr;

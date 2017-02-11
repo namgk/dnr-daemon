@@ -25,7 +25,7 @@ export default class Auth {
         fs.mkdirSync(Auth.DNR_HOME);
       }
       obj.token = fs.readFileSync(Auth.DNR_HOME + '/token_' + this.hostString, 'utf8');
-    } catch (e){console.log(e)}
+    } catch (e){}
   }
 
   public getToken(): string {

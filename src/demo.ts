@@ -29,7 +29,7 @@ function main(){
 
   var command = process.argv[2]
   if (command === 'getallflow'){
-    upstreamFlowsApi.getAllFlow().then(r=>{
+    upstreamFlowsApi.getFlows().then(r=>{
       console.log(r)
     }).catch(e=>{
       console.log(e)

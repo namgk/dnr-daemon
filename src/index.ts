@@ -7,7 +7,7 @@ import fs = require('fs')
 const DNR_HOME: string = process.env.HOME+ '/.dnr-daemon'
 const CMD_GET_FLOW: string = 'getflow'
 const CMD_GET_FLOWS: string = 'getflows'
-const CMD_DELETE_FLOW: string = 'deleteflow'
+const CMD_DELETE_FLOW: string = 'uninstallflow'
 const CMD_INSTALL_FLOW: string = 'installflow'
 const CMD_TARGET: string = 'target'
 
@@ -69,7 +69,7 @@ function main(){
   var flowsApi: FlowsAPI = new FlowsAPI(auth)
 
   if (command === CMD_GET_FLOWS){
-    flowsApi.getAllFlow().then(r=>{
+    flowsApi.getFlows().then(r=>{
       console.log(r)
     }).catch(e=>{
       console.log(e)

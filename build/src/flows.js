@@ -18,7 +18,7 @@ var FlowsAPI = (function () {
     FlowsAPI.prototype.setAuth = function (auth) {
         this.auth = auth;
     };
-    FlowsAPI.prototype.getAllFlow = function () {
+    FlowsAPI.prototype.getFlows = function () {
         var obj = this;
         var opt = clone(obj.authOpt);
         opt.uri = FlowsAPI.FLOW_RESOURCE + 's';
@@ -51,6 +51,22 @@ var FlowsAPI = (function () {
         var opt = clone(obj.authOpt);
         opt.uri = FlowsAPI.FLOW_RESOURCE + '/' + id;
         opt.method = 'DELETE';
+        return new Promise(function (f, r) {
+            request(opt)
+                .then(function (body) {
+                f(body);
+            })
+                .catch(function (er) {
+                r({ error: er.error, statusCode: er.statusCode, statusMessage: er.message });
+            });
+        });
+    };
+    FlowsAPI.prototype.updateFlow = function (id, flow) {
+        var obj = this;
+        var opt = clone(obj.authOpt);
+        opt.uri = FlowsAPI.FLOW_RESOURCE + '/' + id;
+        opt.body = flow;
+        opt.method = 'PUT';
         return new Promise(function (f, r) {
             request(opt)
                 .then(function (body) {

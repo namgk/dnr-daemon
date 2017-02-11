@@ -24,7 +24,7 @@ function main() {
     var flowsApi5 = new flows_1.default(auth5);
     var command = process.argv[2];
     if (command === 'getallflow') {
-        upstreamFlowsApi.getAllFlow().then(function (r) {
+        upstreamFlowsApi.getFlows().then(function (r) {
             console.log(r);
         }).catch(function (e) {
             console.log(e);

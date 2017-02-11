@@ -9,6 +9,7 @@ describe("Test Dnr", function () {
         var test_flow = testDataObj[key];
         it("correctly dnrize this flow: " + key, function () {
             var dnrized = dnr_1.default.dnrize(test_flow);
+            chai_1.expect(dnrized.label.startsWith('dnr_') && dnrized.label.endsWith(test_flow.id));
             var dnrGateway = [];
             var originalNodesMap = new Map();
             for (var _i = 0, _a = test_flow.nodes; _i < _a.length; _i++) {

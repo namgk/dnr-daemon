@@ -13,6 +13,7 @@ describe("Test Dnr", function () {
 
     it("correctly dnrize this flow: " + key, function(){
       var dnrized = Dnr.dnrize(test_flow)
+      expect(dnrized.label.startsWith('dnr_') && dnrized.label.endsWith(test_flow.id))
       var dnrGateway : string[]= []
       // mapify
       var originalNodesMap : Map<string,any> = new Map<string, any>()

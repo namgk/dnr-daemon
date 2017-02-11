@@ -27,7 +27,7 @@ export default class FlowsAPI {
     this.auth = auth
   }
 
-  public getAllFlow(): Promise<string> {
+  public getFlows(): Promise<string> {
     let obj = this
     let opt = clone(obj.authOpt)
     opt.uri = FlowsAPI.FLOW_RESOURCE + 's'
@@ -57,12 +57,28 @@ export default class FlowsAPI {
     })
   }
 
-
   public uninstallFlow(id: string): Promise<string> {
     let obj = this
     let opt = clone(obj.authOpt)
     opt.uri = FlowsAPI.FLOW_RESOURCE + '/' + id
     opt.method = 'DELETE'
+    return new Promise<string>(function(f,r){
+      request(opt)
+      .then((body) => {
+        f(body)
+      })
+      .catch(function (er) {
+        r({error: er.error, statusCode: er.statusCode, statusMessage: er.message})
+      })
+    })
+  }
+
+  public updateFlow(id: string, flow: string): Promise<string> {
+    let obj = this
+    let opt = clone(obj.authOpt)
+    opt.uri = FlowsAPI.FLOW_RESOURCE + '/' + id
+    opt.body = flow
+    opt.method = 'PUT'
     return new Promise<string>(function(f,r){
       request(opt)
       .then((body) => {

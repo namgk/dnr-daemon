@@ -77,6 +77,11 @@ export default class Dnr {
       dnrized.nodes.push(dnrGateway)
     }
 
+    // step 4: keep original flow ID by rewriting the label
+    // because when deployed, new flow Id will be generated
+    // also distinguish between dnrized flows and normal flows
+    dnrized.label = 'dnr_' + dnrized.id
+
     return dnrized
   }
 }

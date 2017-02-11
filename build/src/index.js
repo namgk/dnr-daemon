@@ -5,7 +5,7 @@ var fs = require("fs");
 var DNR_HOME = process.env.HOME + '/.dnr-daemon';
 var CMD_GET_FLOW = 'getflow';
 var CMD_GET_FLOWS = 'getflows';
-var CMD_DELETE_FLOW = 'deleteflow';
+var CMD_DELETE_FLOW = 'uninstallflow';
 var CMD_INSTALL_FLOW = 'installflow';
 var CMD_TARGET = 'target';
 var command = process.argv[2];
@@ -59,7 +59,7 @@ else {
 function main() {
     var flowsApi = new flows_1.default(auth);
     if (command === CMD_GET_FLOWS) {
-        flowsApi.getAllFlow().then(function (r) {
+        flowsApi.getFlows().then(function (r) {
             console.log(r);
         }).catch(function (e) {
             console.log(e);
