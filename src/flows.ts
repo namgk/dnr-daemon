@@ -8,6 +8,7 @@ export default class FlowsAPI {
   private auth: Auth
   private authOpt : request.OptionsWithUri
   private static FLOW_RESOURCE: string = '/flow'
+  private static NODES_RESOURCE: string = '/nodes'
 
   constructor(auth: Auth) {
     this.auth = auth
@@ -25,6 +26,43 @@ export default class FlowsAPI {
 
   public setAuth(auth: Auth){
     this.auth = auth
+  }
+
+  public getNodes(): Promise<string> {
+    let obj = this
+    let opt = clone(obj.authOpt)
+    opt.uri = FlowsAPI.NODES_RESOURCE
+    opt.headers = {
+      'accept': 'application/json'
+    }
+    return new Promise<string>(function(f,r){
+      request(opt)
+      .then((body) => {
+        f(body)
+      })
+      .catch(function (er) {
+        r({error: er.error, statusCode: er.statusCode, statusMessage: er.message})
+      })
+    })
+  }
+
+  public installNode(node: string): Promise<string> {
+    let obj = this
+    let opt = clone(obj.authOpt)
+    opt.uri = FlowsAPI.NODES_RESOURCE
+    opt.body = JSON.stringify({
+      "module": node
+    })
+    opt.method = 'POST'
+    return new Promise<string>(function(f,r){
+      request(opt)
+      .then((body) => {
+        f(body)
+      })
+      .catch(function (er) {
+        r({error: er.error, statusCode: er.statusCode, statusMessage: er.message})
+      })
+    })
   }
 
   public getFlows(): Promise<string> {

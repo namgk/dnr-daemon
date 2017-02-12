@@ -5,6 +5,8 @@ import Utils from './utils'
 import fs = require('fs')
 
 const DNR_HOME: string = process.env.HOME+ '/.dnr-daemon'
+const CMD_GET_NODES: string = 'getnodes'
+const CMD_INSTALL_NODE: string = 'installnode'
 const CMD_GET_FLOW: string = 'getflow'
 const CMD_GET_FLOWS: string = 'getflows'
 const CMD_DELETE_FLOW: string = 'uninstallflow'
@@ -12,7 +14,9 @@ const CMD_INSTALL_FLOW: string = 'installflow'
 const CMD_TARGET: string = 'target'
 
 var command: string = process.argv[2]
-if (command !== CMD_GET_FLOW && 
+if (command !== CMD_INSTALL_NODE && 
+    command !== CMD_GET_NODES && 
+    command !== CMD_GET_FLOW && 
     command !== CMD_GET_FLOWS && 
     command !== CMD_INSTALL_FLOW && 
     command !== CMD_DELETE_FLOW &&
@@ -42,11 +46,14 @@ if (command === CMD_TARGET){
   }
 
   var auth = new Auth(target.host, target.user, target.pass)
-  auth.auth().then(()=>{
+  auth.probeAuth()
+  .catch(()=>{
+    return auth.auth()
+  }).then(()=>{
     fs.writeFileSync(DNR_HOME + '/target', process.argv[3])
     console.log('target set - ' + process.argv[3])
     process.exit()
-  }).catch(console.log)
+  })
 } else {
   try {
     var target: any = fs.readFileSync(DNR_HOME + '/target', 'utf8');
@@ -67,6 +74,20 @@ if (command === CMD_TARGET){
 
 function main(){
   var flowsApi: FlowsAPI = new FlowsAPI(auth)
+
+  if (command === CMD_GET_NODES){
+    flowsApi.getNodes().then(console.log).catch(console.log)
+  }
+
+  if (command === CMD_INSTALL_NODE){
+    let node = process.argv[3]
+    if (!node){
+      console.log('usage: npm start ' + CMD_INSTALL_NODE + ' <node_name>')
+      process.exit()
+    }
+
+    flowsApi.installNode(node).then(console.log).catch(console.log)
+  }
 
   if (command === CMD_GET_FLOWS){
     flowsApi.getFlows().then(r=>{
