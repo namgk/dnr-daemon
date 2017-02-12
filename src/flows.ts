@@ -32,9 +32,7 @@ export default class FlowsAPI {
     let obj = this
     let opt = clone(obj.authOpt)
     opt.uri = FlowsAPI.NODES_RESOURCE
-    opt.headers = {
-      'accept': 'application/json'
-    }
+    opt.headers['accept']= 'application/json'
     return new Promise<string>(function(f,r){
       request(opt)
       .then((body) => {
