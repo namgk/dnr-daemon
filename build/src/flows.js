@@ -22,9 +22,7 @@ var FlowsAPI = (function () {
         var obj = this;
         var opt = clone(obj.authOpt);
         opt.uri = FlowsAPI.NODES_RESOURCE;
-        opt.headers = {
-            'accept': 'application/json'
-        };
+        opt.headers['accept'] = 'application/json';
         return new Promise(function (f, r) {
             request(opt)
                 .then(function (body) {
