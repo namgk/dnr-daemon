@@ -1,6 +1,6 @@
 "use strict";
-var request = require("request-promise-native");
-var clone = require("clone");
+var request = require('request-promise-native');
+var clone = require('clone');
 var FlowsAPI = (function () {
     function FlowsAPI(auth) {
         this.auth = auth;
@@ -126,10 +126,10 @@ var FlowsAPI = (function () {
             });
         });
     };
+    FlowsAPI.FLOW_RESOURCE = '/flow';
+    FlowsAPI.NODES_RESOURCE = '/nodes';
     return FlowsAPI;
 }());
-FlowsAPI.FLOW_RESOURCE = '/flow';
-FlowsAPI.NODES_RESOURCE = '/nodes';
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = FlowsAPI;
 //# sourceMappingURL=flows.js.map

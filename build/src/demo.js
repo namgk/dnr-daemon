@@ -1,9 +1,9 @@
 "use strict";
-var auth_1 = require("./auth");
-var flows_1 = require("./flows");
-var dnr_1 = require("./dnr");
-var utils_1 = require("./utils");
-var settings_1 = require("./settings");
+var auth_1 = require('./auth');
+var flows_1 = require('./flows');
+var dnr_1 = require('./dnr');
+var utils_1 = require('./utils');
+var settings_1 = require('./settings');
 var upstreamAuth = new auth_1.default(settings_1.default.UPSTREAM, settings_1.default.UPSTREAM_USER, settings_1.default.UPSTREAM_PASS);
 var auth = new auth_1.default(settings_1.default.TARGET, settings_1.default.USER, settings_1.default.PASS);
 upstreamAuth.auth().then(function () {

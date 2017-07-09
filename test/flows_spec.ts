@@ -12,9 +12,17 @@ describe("Test Flows", function () {
   var testConfigObj = JSON.parse(testConfig)
   
   before(function (done) {
-    let target = testConfigObj.auth_targets[0].TARGET
-    let user = testConfigObj.auth_targets[0].USER
-    let auth = new Auth(target, user, process.env.NRPWD);
+    let auth = null
+    if (testConfigObj.auth_targets.length > 0){
+      let target = testConfigObj.auth_targets[0].TARGET
+      let user = testConfigObj.auth_targets[0].USER
+      auth = new Auth(target, user, process.env.NRPWD);
+    } else if (testConfigObj.noauth_targets.length > 0){
+      let target = testConfigObj.noauth_targets[0]
+      auth = new Auth(target, '', '');
+    } else {
+      done('no target specified for the test!')
+    }
     auth.probeAuth().then(r=>{
       flowsApi = new FlowsAPI(auth)
       done()

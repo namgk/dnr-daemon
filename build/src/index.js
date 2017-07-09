@@ -1,7 +1,7 @@
 "use strict";
-var auth_1 = require("./auth");
-var flows_1 = require("./flows");
-var fs = require("fs");
+var auth_1 = require('./auth');
+var flows_1 = require('./flows');
+var fs = require('fs');
 var DNR_HOME = process.env.HOME + '/.dnr-daemon';
 var CMD_GET_NODES = 'getnodes';
 var CMD_INSTALL_NODE = 'installnode';

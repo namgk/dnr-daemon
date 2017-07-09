@@ -1,8 +1,8 @@
 "use strict";
-var auth_1 = require("../src/auth");
-var flows_1 = require("../src/flows");
-var fs = require("fs");
-var chai_1 = require("chai");
+var auth_1 = require('../src/auth');
+var flows_1 = require('../src/flows');
+var fs = require('fs');
+var chai_1 = require('chai');
 describe("Test Flows", function () {
     var auth = null;
     var flowsApi = null;
@@ -11,9 +11,19 @@ describe("Test Flows", function () {
     var testConfig = fs.readFileSync(__dirname + '/../../test/test_configs.json', 'utf8');
     var testConfigObj = JSON.parse(testConfig);
     before(function (done) {
-        var target = testConfigObj.auth_targets[0].TARGET;
-        var user = testConfigObj.auth_targets[0].USER;
-        var auth = new auth_1.default(target, user, process.env.NRPWD);
+        var auth = null;
+        if (testConfigObj.auth_targets.length > 0) {
+            var target = testConfigObj.auth_targets[0].TARGET;
+            var user = testConfigObj.auth_targets[0].USER;
+            auth = new auth_1.default(target, user, process.env.NRPWD);
+        }
+        else if (testConfigObj.noauth_targets.length > 0) {
+            var target = testConfigObj.noauth_targets[0];
+            auth = new auth_1.default(target, '', '');
+        }
+        else {
+            done('no target specified for the test!');
+        }
         auth.probeAuth().then(function (r) {
             flowsApi = new flows_1.default(auth);
             done();

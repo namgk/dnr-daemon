@@ -12,6 +12,6 @@
     }
   ],
   "noauth_targets": [
-
+    "http://localhost:2880"
   ]
 }

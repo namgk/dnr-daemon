@@ -1,11 +1,11 @@
 "use strict";
-var fs = require("fs");
-var chai_1 = require("chai");
-var dnr_1 = require("../src/dnr");
+var fs = require('fs');
+var chai_1 = require('chai');
+var dnr_1 = require('../src/dnr');
 describe("Test Dnr", function () {
     var testData = fs.readFileSync(__dirname + '/../../test/test_data.json', 'utf8');
     var testDataObj = JSON.parse(testData);
-    var _loop_1 = function (key) {
+    var _loop_1 = function(key) {
         var test_flow = testDataObj[key];
         it("correctly dnrize this flow: " + key, function () {
             var dnrized = dnr_1.default.dnrize(test_flow);

@@ -1,11 +1,12 @@
 "use strict";
-var request = require("request");
-var fs = require("fs");
+var request = require('request');
+var fs = require('fs');
 var Auth = (function () {
     function Auth(host, username, password) {
         this.nodeRedHost = host;
         this.username = username;
         this.password = password;
+        console.log(host);
         this.hostString = host.split('//')[1].replace(':', '_').replace('/', '');
         var obj = this;
         try {
@@ -84,11 +85,11 @@ var Auth = (function () {
             });
         });
     };
+    Auth.DNR_HOME = process.env.HOME + '/.dnr-daemon';
+    Auth.TOKEN_PATH = '/auth/token';
+    Auth.A_PRIVATE_RESOURCE = '/settings';
     return Auth;
 }());
-Auth.DNR_HOME = process.env.HOME + '/.dnr-daemon';
-Auth.TOKEN_PATH = '/auth/token';
-Auth.A_PRIVATE_RESOURCE = '/settings';
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Auth;
 //# sourceMappingURL=auth.js.map

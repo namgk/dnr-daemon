@@ -1,8 +1,8 @@
 "use strict";
-var auth_1 = require("../src/auth");
-var fs = require("fs");
-var request = require("request-promise-native");
-var chai_1 = require("chai");
+var auth_1 = require('../src/auth');
+var fs = require('fs');
+var request = require('request-promise-native');
+var chai_1 = require('chai');
 describe("Test Auth", function () {
     var testData = fs.readFileSync(__dirname + '/../../test/test_configs.json', 'utf8');
     var testDataObj = JSON.parse(testData);
@@ -34,7 +34,7 @@ describe("Test Auth", function () {
             fs.unlinkSync(process.env.HOME + '/.dnr-daemon/' + token);
         }
     });
-    var _loop_1 = function (target) {
+    var _loop_1 = function(target) {
         it("authenticates", function (done) {
             var auth = new auth_1.default(target.TARGET, target.USER, process.env.NRPWD);
             auth.probeAuth().then(function (r) {
@@ -57,7 +57,7 @@ describe("Test Auth", function () {
         var target = targets_2[_i];
         _loop_1(target);
     }
-    var _loop_2 = function (target) {
+    var _loop_2 = function(target) {
         it("not authenticates with empty username/password", function (done) {
             var auth = new auth_1.default(target.TARGET, '', '');
             auth.probeAuth().then(function (r) {
@@ -75,7 +75,7 @@ describe("Test Auth", function () {
         var target = targets_3[_a];
         _loop_2(target);
     }
-    var _loop_3 = function (target) {
+    var _loop_3 = function(target) {
         it("not authenticates - wrong username/password", function (done) {
             var auth = new auth_1.default(target.TARGET, 'awef', 'fwe');
             auth.probeAuth().then(function (r) {
@@ -93,7 +93,7 @@ describe("Test Auth", function () {
         var target = targets_4[_b];
         _loop_3(target);
     }
-    var _loop_4 = function (target) {
+    var _loop_4 = function(target) {
         it("works with no auth", function (done) {
             var auth = new auth_1.default(target, '', '');
             auth.probeAuth().then(function (r) {
