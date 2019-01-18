@@ -5,6 +5,7 @@ var fs = require('fs');
 var DNR_HOME = process.env.HOME + '/.dnr-daemon';
 var CMD_GET_NODES = 'getnodes';
 var CMD_INSTALL_NODE = 'installnode';
+var CMD_UNINSTALL_NODE = 'uninstallnode';
 var CMD_GET_FLOW = 'getflow';
 var CMD_GET_FLOWS = 'getflows';
 var CMD_DELETE_FLOW = 'uninstallflow';
@@ -12,6 +13,7 @@ var CMD_INSTALL_FLOW = 'installflow';
 var CMD_TARGET = 'target';
 var command = process.argv[2];
 if (command !== CMD_INSTALL_NODE &&
+    command !== CMD_UNINSTALL_NODE &&
     command !== CMD_GET_NODES &&
     command !== CMD_GET_FLOW &&
     command !== CMD_GET_FLOWS &&
@@ -22,6 +24,8 @@ if (command !== CMD_INSTALL_NODE &&
         + CMD_GET_FLOWS + '|'
         + CMD_INSTALL_FLOW + '|'
         + CMD_DELETE_FLOW + '|'
+        + CMD_INSTALL_NODE + '|'
+        + CMD_UNINSTALL_NODE + '|'
         + CMD_TARGET + '>');
     process.exit();
 }
@@ -75,6 +79,14 @@ function main() {
             process.exit();
         }
         flowsApi.installNode(node).then(console.log).catch(console.log);
+    }
+    if (command === CMD_UNINSTALL_NODE) {
+        var node = process.argv[3];
+        if (!node) {
+            console.log('usage: npm start ' + CMD_UNINSTALL_NODE + ' <node_name>');
+            process.exit();
+        }
+        flowsApi.uninstallNode(node).then(console.log).catch(console.log);
     }
     if (command === CMD_GET_FLOWS) {
         flowsApi.getFlows().then(function (r) {

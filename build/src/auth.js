@@ -6,7 +6,6 @@ var Auth = (function () {
         this.nodeRedHost = host;
         this.username = username;
         this.password = password;
-        console.log(host);
         this.hostString = host.split('//')[1].replace(':', '_').replace('/', '');
         var obj = this;
         try {

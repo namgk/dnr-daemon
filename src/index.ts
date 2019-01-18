@@ -7,6 +7,7 @@ import fs = require('fs')
 const DNR_HOME: string = process.env.HOME+ '/.dnr-daemon'
 const CMD_GET_NODES: string = 'getnodes'
 const CMD_INSTALL_NODE: string = 'installnode'
+const CMD_UNINSTALL_NODE: string = 'uninstallnode'
 const CMD_GET_FLOW: string = 'getflow'
 const CMD_GET_FLOWS: string = 'getflows'
 const CMD_DELETE_FLOW: string = 'uninstallflow'
@@ -15,6 +16,7 @@ const CMD_TARGET: string = 'target'
 
 var command: string = process.argv[2]
 if (command !== CMD_INSTALL_NODE && 
+    command !== CMD_UNINSTALL_NODE &&
     command !== CMD_GET_NODES && 
     command !== CMD_GET_FLOW && 
     command !== CMD_GET_FLOWS && 
@@ -26,6 +28,8 @@ if (command !== CMD_INSTALL_NODE &&
                                    + CMD_GET_FLOWS + '|'
                                    + CMD_INSTALL_FLOW + '|'
                                    + CMD_DELETE_FLOW + '|'
+                                   + CMD_INSTALL_NODE + '|'
+                                   + CMD_UNINSTALL_NODE + '|'
                                    + CMD_TARGET + '>')
   process.exit()
 }
@@ -87,6 +91,16 @@ function main(){
     }
 
     flowsApi.installNode(node).then(console.log).catch(console.log)
+  }
+
+  if (command === CMD_UNINSTALL_NODE){
+    let node = process.argv[3]
+    if (!node){
+      console.log('usage: npm start ' + CMD_UNINSTALL_NODE + ' <node_name>')
+      process.exit()
+    }
+
+    flowsApi.uninstallNode(node).then(console.log).catch(console.log)
   }
 
   if (command === CMD_GET_FLOWS){

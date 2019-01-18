@@ -34,6 +34,21 @@ describe("Test Flows", function () {
     })
   })
 
+  it('install, uninstall node', function(done){
+    var test_node = 'node-red-contrib-firebase-realtime-database'
+    flowsApi.installNode(test_node)
+    .then(r=>{
+      let installedModule = JSON.parse(r);
+      expect(installedModule.name).to.equal(test_node);
+      expect(installedModule.nodes.length).greaterThan(0);
+
+      return flowsApi.uninstallNode(test_node)
+    })
+    .then(r => {
+      done();
+    }).catch(done)
+  })
+
   it('install, delete flow', function(done){
     var test_flow = testDataObj.inject_debug
     flowsApi.installFlow(JSON.stringify(test_flow))

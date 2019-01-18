@@ -51,6 +51,21 @@ var FlowsAPI = (function () {
             });
         });
     };
+    FlowsAPI.prototype.uninstallNode = function (node) {
+        var obj = this;
+        var opt = clone(obj.authOpt);
+        opt.uri = FlowsAPI.NODES_RESOURCE + '/' + node;
+        opt.method = 'DELETE';
+        return new Promise(function (f, r) {
+            request(opt)
+                .then(function (body) {
+                f(body);
+            })
+                .catch(function (er) {
+                r({ error: er.error, statusCode: er.statusCode, statusMessage: er.message });
+            });
+        });
+    };
     FlowsAPI.prototype.getFlows = function () {
         var obj = this;
         var opt = clone(obj.authOpt);

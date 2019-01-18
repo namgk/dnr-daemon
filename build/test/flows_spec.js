@@ -34,6 +34,19 @@ describe("Test Flows", function () {
             }).catch(done);
         });
     });
+    it('install, uninstall node', function (done) {
+        var test_node = 'node-red-contrib-firebase-realtime-database';
+        flowsApi.installNode(test_node)
+            .then(function (r) {
+            var installedModule = JSON.parse(r);
+            chai_1.expect(installedModule.name).to.equal(test_node);
+            chai_1.expect(installedModule.nodes.length).greaterThan(0);
+            return flowsApi.uninstallNode(test_node);
+        })
+            .then(function (r) {
+            done();
+        }).catch(done);
+    });
     it('install, delete flow', function (done) {
         var test_flow = testDataObj.inject_debug;
         flowsApi.installFlow(JSON.stringify(test_flow))

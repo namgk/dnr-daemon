@@ -63,6 +63,22 @@ export default class FlowsAPI {
     })
   }
 
+  public uninstallNode(node: string): Promise<string> {
+    let obj = this
+    let opt = clone(obj.authOpt)
+    opt.uri = FlowsAPI.NODES_RESOURCE + '/' + node
+    opt.method = 'DELETE'
+    return new Promise<string>(function(f,r){
+      request(opt)
+      .then((body) => {
+        f(body)
+      })
+      .catch(function (er) {
+        r({error: er.error, statusCode: er.statusCode, statusMessage: er.message})
+      })
+    })
+  }
+
   public getFlows(): Promise<string> {
     let obj = this
     let opt = clone(obj.authOpt)
