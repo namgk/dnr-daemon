@@ -1,13 +1,14 @@
 "use strict";
-var request = require('request');
-var fs = require('fs');
-var Auth = (function () {
-    function Auth(host, username, password) {
+Object.defineProperty(exports, "__esModule", { value: true });
+const request = require("request");
+const fs = require("fs");
+class Auth {
+    constructor(host, username, password) {
         this.nodeRedHost = host;
         this.username = username;
         this.password = password;
         this.hostString = host.split('//')[1].replace(':', '_').replace('/', '');
-        var obj = this;
+        let obj = this;
         try {
             if (!fs.existsSync(Auth.DNR_HOME)) {
                 fs.mkdirSync(Auth.DNR_HOME);
@@ -16,20 +17,20 @@ var Auth = (function () {
         }
         catch (e) { }
     }
-    Auth.prototype.getToken = function () {
+    getToken() {
         return this.token;
-    };
-    Auth.prototype.getHost = function () {
+    }
+    getHost() {
         return this.nodeRedHost;
-    };
-    Auth.prototype.probeAuth = function () {
-        var obj = this;
+    }
+    probeAuth() {
+        let obj = this;
         return new Promise(function (f, r) {
-            var optNoAuth = {
+            const optNoAuth = {
                 baseUrl: obj.nodeRedHost,
                 uri: Auth.A_PRIVATE_RESOURCE
             };
-            request.get(optNoAuth, function (er, res, body) {
+            request.get(optNoAuth, (er, res, body) => {
                 if (er) {
                     return r(er);
                 }
@@ -40,12 +41,12 @@ var Auth = (function () {
                 if (!obj.token) {
                     return r(body);
                 }
-                var opt = {
+                const opt = {
                     baseUrl: obj.nodeRedHost,
                     uri: Auth.A_PRIVATE_RESOURCE,
                     headers: { 'Authorization': 'Bearer ' + obj.token }
                 };
-                request.get(opt, function (er2, res2, body) {
+                request.get(opt, (er2, res2, body) => {
                     if (er2) {
                         return r(er2);
                     }
@@ -58,17 +59,17 @@ var Auth = (function () {
                 });
             });
         });
-    };
-    Auth.prototype.auth = function () {
-        var obj = this;
+    }
+    auth() {
+        let obj = this;
         return new Promise(function (f, r) {
-            var opt = {
+            const opt = {
                 baseUrl: obj.nodeRedHost,
                 uri: Auth.TOKEN_PATH,
                 headers: { 'content-type': 'application/x-www-form-urlencoded' },
                 body: 'client_id=node-red-admin&grant_type=password&scope=*&username=' + obj.username + '&password=' + obj.password
             };
-            request.post(opt, function (er, res, body) {
+            request.post(opt, (er, res, body) => {
                 if (er || body === 'Unauthorized') {
                     return r(er + ' ' + body);
                 }
@@ -83,12 +84,10 @@ var Auth = (function () {
                 f(obj.token);
             });
         });
-    };
-    Auth.DNR_HOME = process.env.HOME + '/.dnr-daemon';
-    Auth.TOKEN_PATH = '/auth/token';
-    Auth.A_PRIVATE_RESOURCE = '/settings';
-    return Auth;
-}());
-Object.defineProperty(exports, "__esModule", { value: true });
+    }
+}
+Auth.DNR_HOME = process.env.HOME + '/.dnr-daemon';
+Auth.TOKEN_PATH = '/auth/token';
+Auth.A_PRIVATE_RESOURCE = '/settings';
 exports.default = Auth;
 //# sourceMappingURL=auth.js.map

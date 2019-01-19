@@ -1,15 +1,13 @@
 "use strict";
-var utils_1 = require('./utils');
-var Dnr = (function () {
-    function Dnr() {
-    }
-    Dnr.dnrize = function (original) {
+Object.defineProperty(exports, "__esModule", { value: true });
+const utils_1 = require("./utils");
+class Dnr {
+    static dnrize(original) {
         var dnrized = JSON.parse(JSON.stringify(original));
         var nodesList = dnrized.nodes;
         var nodesMap = new Map();
-        for (var _i = 0, nodesList_1 = nodesList; _i < nodesList_1.length; _i++) {
-            var node = nodesList_1[_i];
-            var nodeId = node.id;
+        for (let node of nodesList) {
+            let nodeId = node.id;
             if (!nodesMap.get(nodeId)) {
                 nodesMap.set(nodeId, node);
             }
@@ -24,21 +22,20 @@ var Dnr = (function () {
             z: dnrized.id,
             type: 'dnr-gateway'
         };
-        for (var _a = 0, nodesList_2 = nodesList; _a < nodesList_2.length; _a++) {
-            var node = nodesList_2[_a];
-            var nodeId = node.id;
-            var nodeConstraints = node.constraints;
+        for (let node of nodesList) {
+            let nodeId = node.id;
+            let nodeConstraints = node.constraints;
             if (nodeConstraints) {
                 var linkConstraints = nodeConstraints.link;
             }
-            for (var output in node.wires) {
-                var wires = node.wires[output];
-                for (var i = 0; i < wires.length; i++) {
-                    var linkType = void 0;
+            for (let output in node.wires) {
+                let wires = node.wires[output];
+                for (let i = 0; i < wires.length; i++) {
+                    let linkType;
                     if (linkConstraints) {
                         linkType = linkConstraints[output + '_' + wires[i]] || linkType;
                     }
-                    var dnrNode = {
+                    let dnrNode = {
                         id: utils_1.default.generateId(),
                         type: 'dnr',
                         z: node.z,
@@ -61,9 +58,7 @@ var Dnr = (function () {
         }
         dnrized.label = 'dnr_' + dnrized.id;
         return dnrized;
-    };
-    return Dnr;
-}());
-Object.defineProperty(exports, "__esModule", { value: true });
+    }
+}
 exports.default = Dnr;
 //# sourceMappingURL=dnr.js.map

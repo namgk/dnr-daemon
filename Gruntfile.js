@@ -45,7 +45,7 @@ module.exports = function(grunt) {
         options: {
           fast: "never",
           module: 'commonjs',
-          target: 'es5',
+          target: 'es2015',
         },
         files:{
           'build/': ['src/**/*.ts', 'test/**/*.ts']

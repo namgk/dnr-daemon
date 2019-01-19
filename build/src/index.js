@@ -1,16 +1,17 @@
 "use strict";
-var auth_1 = require('./auth');
-var flows_1 = require('./flows');
-var fs = require('fs');
-var DNR_HOME = process.env.HOME + '/.dnr-daemon';
-var CMD_GET_NODES = 'getnodes';
-var CMD_INSTALL_NODE = 'installnode';
-var CMD_UNINSTALL_NODE = 'uninstallnode';
-var CMD_GET_FLOW = 'getflow';
-var CMD_GET_FLOWS = 'getflows';
-var CMD_DELETE_FLOW = 'uninstallflow';
-var CMD_INSTALL_FLOW = 'installflow';
-var CMD_TARGET = 'target';
+Object.defineProperty(exports, "__esModule", { value: true });
+const auth_1 = require("./auth");
+const flows_1 = require("./flows");
+const fs = require("fs");
+const DNR_HOME = process.env.HOME + '/.dnr-daemon';
+const CMD_GET_NODES = 'getnodes';
+const CMD_INSTALL_NODE = 'installnode';
+const CMD_UNINSTALL_NODE = 'uninstallnode';
+const CMD_GET_FLOW = 'getflow';
+const CMD_GET_FLOWS = 'getflows';
+const CMD_DELETE_FLOW = 'uninstallflow';
+const CMD_INSTALL_FLOW = 'installflow';
+const CMD_TARGET = 'target';
 var command = process.argv[2];
 if (command !== CMD_INSTALL_NODE &&
     command !== CMD_UNINSTALL_NODE &&
@@ -34,18 +35,18 @@ if (command === CMD_TARGET) {
         console.log('usage: >npm start ' + CMD_TARGET + ' <target> [user] [pass]');
         process.exit();
     }
-    var target_1 = {
+    let target = {
         host: process.argv[3]
     };
     if (process.argv.length === 6) {
-        target_1.user = process.argv[4];
-        target_1.pass = process.argv[5];
+        target.user = process.argv[4];
+        target.pass = process.argv[5];
     }
-    var auth = new auth_1.default(target_1.host, target_1.user, target_1.pass);
+    var auth = new auth_1.default(target.host, target.user, target.pass);
     auth.probeAuth()
-        .catch(function () {
+        .catch(() => {
         return auth.auth();
-    }).then(function () {
+    }).then(() => {
         fs.writeFileSync(DNR_HOME + '/target', process.argv[3]);
         console.log('target set - ' + process.argv[3]);
         process.exit();
@@ -63,7 +64,7 @@ else {
         process.exit();
     }
     var auth = new auth_1.default(target, "", "");
-    auth.probeAuth().then(function () {
+    auth.probeAuth().then(() => {
         main();
     }).catch(console.log);
 }
@@ -73,7 +74,7 @@ function main() {
         flowsApi.getNodes().then(console.log).catch(console.log);
     }
     if (command === CMD_INSTALL_NODE) {
-        var node = process.argv[3];
+        let node = process.argv[3];
         if (!node) {
             console.log('usage: npm start ' + CMD_INSTALL_NODE + ' <node_name>');
             process.exit();
@@ -81,7 +82,7 @@ function main() {
         flowsApi.installNode(node).then(console.log).catch(console.log);
     }
     if (command === CMD_UNINSTALL_NODE) {
-        var node = process.argv[3];
+        let node = process.argv[3];
         if (!node) {
             console.log('usage: npm start ' + CMD_UNINSTALL_NODE + ' <node_name>');
             process.exit();
@@ -89,9 +90,9 @@ function main() {
         flowsApi.uninstallNode(node).then(console.log).catch(console.log);
     }
     if (command === CMD_GET_FLOWS) {
-        flowsApi.getFlows().then(function (r) {
+        flowsApi.getFlows().then(r => {
             console.log(r);
-        }).catch(function (e) {
+        }).catch(e => {
             console.log(e);
         });
     }

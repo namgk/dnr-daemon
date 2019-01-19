@@ -1,13 +1,13 @@
 {
   "name": "dnr-daemon",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "dnr service that downloads dnr flows, parse them based on constraints and redeploy to vanilla node-red",
   "main": "build/src/module.js",
   "scripts": {
     "test": "grunt test",
     "start": "grunt build && node build/src/index.js",
     "build": "grunt build",
-    "clean": "rm -rf node_module; rm -rf build; rm -rf test-report"
+    "clean": "rm -rf node_modules; rm -rf build; rm -rf test-report; rm -rf yarn.lock; rm -rf package-lock.json"
   },
   "repository": {
     "type": "git",
@@ -25,17 +25,15 @@
   "homepage": "https://github.com/namgk/dnr-daemon#readme",
   "dependencies": {
     "clone": "1.0.2",
-    "request": "2.78.0",
-    "request-promise-native": "1.0.3"
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5"
   },
   "devDependencies": {
-    "@types/clone": "0.1.30",
-    "@types/core-js": "0.9.34",
-    "@types/request": "0.0.33",
-    "@types/request-promise-native": "1.0.2",
     "@types/chai": "3.4.34",
     "@types/mocha": "2.2.33",
-    "@types/node": "6.0.48",
+    "@types/node": "^10.12.18",
+    "@types/request": "^2.48.1",
+    "@types/request-promise-native": "^1.0.15",
     "chai": "3.5.0",
     "grunt": "1.0.1",
     "grunt-cli": "1.2.0",
@@ -48,7 +46,6 @@
     "grunt-ts": "6.0.0-beta.3",
     "mocha": "2.3.4",
     "mochawesome": "1.5.3",
-    "typescript": "2.0.10",
-    "typing": "0.1.9"
+    "typescript": "^3.2.4"
   }
 }

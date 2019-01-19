@@ -1,12 +1,13 @@
 "use strict";
-var auth_1 = require('./auth');
-var flows_1 = require('./flows');
-var dnr_1 = require('./dnr');
-var utils_1 = require('./utils');
-var settings_1 = require('./settings');
+Object.defineProperty(exports, "__esModule", { value: true });
+const auth_1 = require("./auth");
+const flows_1 = require("./flows");
+const dnr_1 = require("./dnr");
+const utils_1 = require("./utils");
+const settings_1 = require("./settings");
 var upstreamAuth = new auth_1.default(settings_1.default.UPSTREAM, settings_1.default.UPSTREAM_USER, settings_1.default.UPSTREAM_PASS);
 var auth = new auth_1.default(settings_1.default.TARGET, settings_1.default.USER, settings_1.default.PASS);
-upstreamAuth.auth().then(function () {
+upstreamAuth.auth().then(() => {
     main();
 }).catch(console.log);
 function main() {
@@ -24,9 +25,9 @@ function main() {
     var flowsApi5 = new flows_1.default(auth5);
     var command = process.argv[2];
     if (command === 'getallflow') {
-        upstreamFlowsApi.getFlows().then(function (r) {
+        upstreamFlowsApi.getFlows().then(r => {
             console.log(r);
-        }).catch(function (e) {
+        }).catch(e => {
             console.log(e);
         });
     }
@@ -36,9 +37,9 @@ function main() {
             console.log('usage: npm start getflow <flowId>');
             process.exit();
         }
-        upstreamFlowsApi.getFlow(flowId).then(function (r) {
+        upstreamFlowsApi.getFlow(flowId).then(r => {
             console.log(r);
-        }).catch(function (e) {
+        }).catch(e => {
             console.log(e);
         });
     }
@@ -48,21 +49,19 @@ function main() {
             console.log('usage: npm start deploy <flowId>');
             process.exit();
         }
-        upstreamFlowsApi.getFlow(flowId).then(function (r) {
+        upstreamFlowsApi.getFlow(flowId).then(r => {
             return JSON.parse(r);
         }).then(function (flow) {
             var renamed = {};
-            for (var _i = 0, _a = flow.nodes; _i < _a.length; _i++) {
-                var node = _a[_i];
+            for (let node of flow.nodes) {
                 renamed[node.id] = utils_1.default.generateId();
                 node.id = renamed[node.id];
             }
-            for (var _b = 0, _c = flow.nodes; _b < _c.length; _b++) {
-                var node = _c[_b];
-                for (var i = 0; i < node.wires.length; i++) {
-                    var wires = node.wires[i];
-                    for (var j = 0; j < wires.length; j++) {
-                        var w = wires[j];
+            for (let node of flow.nodes) {
+                for (let i = 0; i < node.wires.length; i++) {
+                    let wires = node.wires[i];
+                    for (let j = 0; j < wires.length; j++) {
+                        let w = wires[j];
                         wires[j] = renamed[w];
                     }
                     node.wires[i] = wires;
@@ -70,9 +69,9 @@ function main() {
             }
             var dnrizedFlow = dnr_1.default.dnrize(flow);
             return flowsApi5.installFlow(JSON.stringify(dnrizedFlow));
-        }).then(function (rr) {
+        }).then(rr => {
             console.log(rr);
-        }).catch(function (e) {
+        }).catch(e => {
             console.log(e);
         });
     }
@@ -82,39 +81,37 @@ function main() {
             console.log('usage: npm start deployAll <flowId>');
             process.exit();
         }
-        upstreamFlowsApi.getFlow(flowId).then(function (r) {
+        upstreamFlowsApi.getFlow(flowId).then(r => {
             return JSON.parse(r);
         }).then(function (flow) {
             var renamed = {};
-            for (var _i = 0, _a = flow.nodes; _i < _a.length; _i++) {
-                var node = _a[_i];
+            for (let node of flow.nodes) {
                 renamed[node.id] = utils_1.default.generateId();
                 node.id = renamed[node.id];
             }
-            for (var _b = 0, _c = flow.nodes; _b < _c.length; _b++) {
-                var node = _c[_b];
-                for (var i = 0; i < node.wires.length; i++) {
-                    var wires = node.wires[i];
-                    for (var j = 0; j < wires.length; j++) {
-                        var w = wires[j];
+            for (let node of flow.nodes) {
+                for (let i = 0; i < node.wires.length; i++) {
+                    let wires = node.wires[i];
+                    for (let j = 0; j < wires.length; j++) {
+                        let w = wires[j];
                         wires[j] = renamed[w];
                     }
                     node.wires[i] = wires;
                 }
             }
             return dnr_1.default.dnrize(flow);
-        }).then(function (dnrizedFlow) {
+        }).then(dnrizedFlow => {
             flowsApi1.installFlow(JSON.stringify(dnrizedFlow));
             return dnrizedFlow;
-        }).then(function (dnrizedFlow) {
+        }).then(dnrizedFlow => {
             flowsApi2.installFlow(JSON.stringify(dnrizedFlow));
             return dnrizedFlow;
-        }).then(function (dnrizedFlow) {
+        }).then(dnrizedFlow => {
             flowsApi3.installFlow(JSON.stringify(dnrizedFlow));
             return dnrizedFlow;
-        }).then(function (dnrizedFlow) {
+        }).then(dnrizedFlow => {
             return flowsApi4.installFlow(JSON.stringify(dnrizedFlow));
-        }).catch(function (e) {
+        }).catch(e => {
             console.log(e);
         });
     }
