@@ -3,6 +3,6 @@
     
   ],
   "noauth_targets": [
-    "http://localhost:1818"
+    "http://localhost:1880"
   ]
 }

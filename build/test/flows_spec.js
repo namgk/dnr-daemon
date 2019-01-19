@@ -10,6 +10,11 @@ describe("Test Flows", function () {
     var testDataObj = JSON.parse(testData);
     var testConfig = fs.readFileSync(__dirname + '/../../test/test_configs.json', 'utf8');
     var testConfigObj = JSON.parse(testConfig);
+    var testNodeInstalls = [
+        'node-red-contrib-firebase-realtime-database',
+        'node-red-contrib-pythonshell',
+        'node-red-contrib-pythonshell'
+    ];
     before(function (done) {
         var auth = null;
         if (testConfigObj.auth_targets.length > 0) {
@@ -30,12 +35,35 @@ describe("Test Flows", function () {
         }).catch(function (e) {
             auth.auth().then(function (r) {
                 flowsApi = new flows_1.default(auth);
-                done();
+                var installRequests = [];
+                for (var i = 0; i < testNodeInstalls.length; i++) {
+                    installRequests.push(flowsApi.uninstallNode(testNodeInstalls[i]));
+                }
+                Promise.all(installRequests)
+                    .then(function (r) {
+                    done();
+                })
+                    .catch(function (e) {
+                    done();
+                });
             }).catch(done);
         });
     });
+    after(function (done) {
+        var installRequests = [];
+        for (var i = 0; i < testNodeInstalls.length; i++) {
+            installRequests.push(flowsApi.uninstallNode(testNodeInstalls[i]));
+        }
+        Promise.all(installRequests)
+            .then(function (r) {
+            done();
+        })
+            .catch(function (e) {
+            done();
+        });
+    });
     it('install, uninstall node', function (done) {
-        var test_node = 'node-red-contrib-firebase-realtime-database';
+        var test_node = testNodeInstalls[0];
         flowsApi.installNode(test_node)
             .then(function (r) {
             var installedModule = JSON.parse(r);
@@ -46,6 +74,38 @@ describe("Test Flows", function () {
             .then(function (r) {
             done();
         }).catch(done);
+    });
+    it('uninstall, install a non exist node', function (done) {
+        var test_node = testNodeInstalls[1];
+        flowsApi.uninstallNode(test_node)
+            .catch(function (uninstallResult) {
+            chai_1.expect(uninstallResult.statusCode).to.equal(404);
+            return flowsApi.installNode(test_node);
+        })
+            .then(function (r) {
+            var installedModule = JSON.parse(r);
+            chai_1.expect(installedModule.name).to.equal(test_node);
+            chai_1.expect(installedModule.nodes.length).greaterThan(0);
+            done();
+        }).catch(done);
+    });
+    it('install an existing node', function (done) {
+        var test_node = testNodeInstalls[2];
+        flowsApi.installNode(test_node)
+            .then(function (r) {
+            var installedModule = JSON.parse(r);
+            chai_1.expect(installedModule.name).to.equal(test_node);
+            chai_1.expect(installedModule.nodes.length).greaterThan(0);
+            return flowsApi.installNode(test_node);
+        })
+            .then(function (r) {
+            done(1);
+        })
+            .catch(function (e) {
+            console.log(e.statusMessage);
+            chai_1.expect(e.statusMessage.indexOf('module_already_loaded')).to.greaterThan(-1);
+            done();
+        });
     });
     it('install, delete flow', function (done) {
         var test_flow = testDataObj.inject_debug;
